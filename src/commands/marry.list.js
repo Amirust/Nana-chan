@@ -4,7 +4,7 @@ const Marriage = require('../structures/Marriage');
 module.exports =
 {
 	info: {
-		name: 'marries'
+		name: 'list'
 	},
 	parentOf: 'marry',
 	async execute( interaction, locale )

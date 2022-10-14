@@ -19,7 +19,7 @@ module.exports = {
 			description: 'Развестись',
 			type: 1
 		}, {
-			name: 'marries',
+			name: 'list',
 			description: 'Получить список всех браков на сервере',
 			type: 1
 		}]
