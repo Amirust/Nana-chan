@@ -1,5 +1,3 @@
-
-const { Routes } = require( 'discord-api-types/v9' );
 const ruPermissions = require( '../assets/ru_permissions.json' );
 
 function localizator( locale )
@@ -10,7 +8,7 @@ function localizator( locale )
 	}
 	catch ( e )
 	{
-        return require( '../localization/ru.json' );
+		return require( '../localization/ru.json' );
 	}
 }
 
@@ -24,7 +22,7 @@ class CommandsController
 	async process( interaction, locale )
 	{
 		interaction = await interaction;
-        const command = this.getCommand( interaction.commandName );
+		const command = this.getCommand( interaction.commandName );
 
 		// Авто-комлпит
 		if ( interaction?.isAutocomplete() )
@@ -100,7 +98,7 @@ class CommandsController
 
 	async sync( guild = null )
 	{
-        const commands = this.commands
+		const commands = this.commands
 			.filter( ( cmd ) => !cmd.parentOf ) // Если это файл субкоманды то не будет деплоится (Должен деплоится только файл декларации)
 			.map( cmd => cmd.info ) // Пихаем только поле info
 			.filter( ( cmd ) => !cmd?.local || false ); // Если команда отмечена как локальная то не будет деплоится при синхронизации
@@ -109,10 +107,10 @@ class CommandsController
 		return await bot.client.application.commands.set(commands);
 	}
 
-    getCommand( name )
-    {
-        return this.commands.find( ( command ) => command?.info.name === name );
-    }
+	getCommand( name )
+	{
+		return this.commands.find( ( command ) => command?.info.name === name );
+	}
 
 	getSubCommand( category, name )
 	{
