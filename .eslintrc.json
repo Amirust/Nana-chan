@@ -1,13 +1,13 @@
 {
-    "env": {
+	"env": {
 		"node": true
 	},
 
 	"parserOptions": {
 		"ecmaVersion": "latest"
 	},
-    
-    "rules": {
-        "indent": ["error", "tab"]
-    }
+
+	"rules": {
+		"indent": ["error", "tab"]
+	}
 }
