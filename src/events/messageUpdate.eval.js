@@ -1,6 +1,6 @@
 const { inspect } = require( 'util' );
 
-module.exports = async ( message ) =>
+module.exports = async ( old, message ) =>
 {
 	if ( !bot.config.owners.includes( message.author.id ) ) { return; }
 
