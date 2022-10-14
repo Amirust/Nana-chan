@@ -28,7 +28,7 @@ module.exports =
 			else { bot.store.activeMarriesRequests.delete( interaction.user.id ) }
 		}
 		// Проверка на то женат ли автор итерации
-		if ( await Marriage.isInitializerMarried( interaction.user.id ) || await Marriage.isTargetMarried( interaction.user.id ) )
+		if ( await Marriage.isMarried( interaction.user.id ) )
 		{
 			return interaction.reply({
 				content: locale.YouAlreadyMarried,
@@ -36,7 +36,7 @@ module.exports =
 			});
 		}
 		// Проверка на то женат ли участник переданный в аргументе user
-		if ( await Marriage.isTargetMarried( member.user.id ) || await Marriage.isInitializerMarried( member.user.id ) )
+		if ( await Marriage.isMarried( member.user.id ) )
 		{
 			return interaction.reply({
 				content: locale.TargetAlreadyMarried,
@@ -69,7 +69,7 @@ module.exports =
 
 		const buttonAcceptFn = async ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
+			if ( i.user.id !== member.user?.id ) { return i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
@@ -83,12 +83,11 @@ module.exports =
 
 		const buttonRejectFn = ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
+			if ( i.user.id !== member.user?.id ) { return i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
-			embed.setAuthor({ name: `${interaction.user.tag} 💔 ${member.user.tag}` })
-			embed.setDescription( locale.embed.descriptionRejected.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
+			embed.setDescription( locale.embed.descriptionRejected.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>`,  ]) );
 
 			i.update({ embeds: [embed], components: [] });
 		}

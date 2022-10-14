@@ -73,6 +73,7 @@ class Bot
 		}
 
 		this.store.activeMarriesRequests = new Collection;
+		this.store.activeDivorcesRequests = new Collection;
 
 		return this;
 	}

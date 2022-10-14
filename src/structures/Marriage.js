@@ -1,4 +1,4 @@
-const { randomBytes } = require('crypto');
+const crypto = require('crypto');
 
 class Marriage {
 	constructor(data)
@@ -9,20 +9,24 @@ class Marriage {
 		this.date = new Date(data.date);
 	}
 
-	static async isInitializerMarried( id )
+	static async isMarried( id )
 	{
-		return !!( await bot.db.collection('marriages').findOne({ initializer: id }) );
+		return !!( await bot.db.collection('marriages').findOne({ $or: [ { initializer: id }, { target: id } ] }) );
 	}
 
-	static async isTargetMarried( id )
-	{
-		return !!( await bot.db.collection('marriages').findOne({ target: id }) );
-	}
-
-	static async create({ initializer, target })
+	static create({ initializer, target })
 	{
 		let id = BigInt( `0x${crypto.createHmac( 'sha256', 'marry' ).update( ( BigInt( initializer ) + BigInt( target ) ).toString() ).digest( 'hex' )}` ) % (1024n * 16n);
 		return new Marriage({ id: id.toString().padStart(5, '0'), initializer, target, date: Date.now() });
+	}
+
+	static async get( id )
+	{
+		if ( /^[0-9]{17,19}$/gm.test(id) )
+		{
+			return new Marriage( await bot.db.collection('marriages').findOne({ $or: [ { initializer: id }, { target: id } ] }) );
+		}
+		return await new Marriage( await bot.db.collection('marriages').findOne({ id }) );
 	}
 
 	async save()
