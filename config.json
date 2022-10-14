@@ -1,0 +1,18 @@
+{
+	"owners": [
+		"965873006079524864",
+		"827609921327202304"
+	],
+	"footer": {
+		"iconURL": "https://cdn.discordapp.com/attachments/1030230451354353767/1030250503885561926/pmislaaira_agaddaiaahzsgiy.png?size=256",
+		"text": "@ Zazopinsk Solutions | 2022"
+	},
+	"colors": {
+		"primary": "#674FFF",
+		"warn": "#FFC94D",
+		"danger": "#FF4D4D",
+		"success": "#4DFF97"
+	},
+	"alphaId": "Аффтар в будущем вставить сюда айди (айпи) альфа версии бота",
+	"version": "1.0.0  [Master]"
+}

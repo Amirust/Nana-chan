@@ -1,0 +1,24 @@
+{
+  "name": "nana-chan",
+  "version": "1.0.0",
+  "description": "Discord бот для Megu.co",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amirust/Nana-chan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Amirust/Nana-chan/issues"
+  },
+  "homepage": "https://github.com/Amirust/Nana-chan#readme",
+  "dependencies": {
+    "discord.js": "^14.6.0",
+    "mongodb": "^4.10.0"
+  }
+}
