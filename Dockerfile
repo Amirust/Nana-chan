@@ -6,7 +6,10 @@ RUN npm install
 
 COPY . .
 
-ENV NANA_TOKEN=...
-ENV MONGO=...
+ARG NANA_TOKEN
+ENV NANA_TOKEN=$NANA_TOKEN
+
+ARG MONGO
+ENV MONGO=$MONGO
 
 CMD [ "node", "index.js" ]
