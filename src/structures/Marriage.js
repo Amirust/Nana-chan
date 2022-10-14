@@ -4,14 +4,14 @@ class Marriage {
 	constructor(data)
 	{
 		this.id = data.id;
-		this.initiazer = data.initiazer;
+		this.initializer = data.initializer;
 		this.target = data.target;
 		this.date = new Date(data.date);
 	}
 
 	static async isInitializerMarried( id )
 	{
-		return !!( await bot.db.collection('marriages').findOne({ initiazer: id }) );
+		return !!( await bot.db.collection('marriages').findOne({ initializer: id }) );
 	}
 
 	static async isTargetMarried( id )
@@ -19,9 +19,10 @@ class Marriage {
 		return !!( await bot.db.collection('marriages').findOne({ target: id }) );
 	}
 
-	static create({ initiazer, target })
+	static async create({ initializer, target })
 	{
-		return new Marriage({ id: randomBytes(4).toString('hex'), initiazer, target, date: Date.now() });
+		let id = BigInt( `0x${crypto.createHmac( 'sha256', 'marry' ).update( ( BigInt( initializer ) + BigInt( target ) ).toString() ).digest( 'hex' )}` ) % (1024n * 16n);
+		return new Marriage({ id: id.toString().padStart(5, '0'), initializer, target, date: Date.now() });
 	}
 
 	async save()
@@ -38,7 +39,7 @@ class Marriage {
 	{
 		return {
 			id: this.id,
-			initiazer: this.initiazer,
+			initializer: this.initializer,
 			target: this.target,
 			date: this.date
 		};

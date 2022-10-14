@@ -11,7 +11,8 @@
 		"primary": "#674FFF",
 		"warn": "#FFC94D",
 		"danger": "#FF4D4D",
-		"success": "#4DFF97"
+		"success": "#4DFF97",
+		"embedBorder": "#2F3136"
 	},
 	"alphaId": "Аффтар в будущем вставить сюда айди (айпи) альфа версии бота",
 	"version": "1.0.0  [Master]"

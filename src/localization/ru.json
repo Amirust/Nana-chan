@@ -18,6 +18,13 @@
                 "accept": "Принять",
                 "reject": "Отказать"
             }
+        },
+        "marry.marries": {
+            "embed": {
+                "title": "Список браков {0}",
+                "description": "`Всего браков:` **{0}**\n",
+                "descriptionField": "`{0}` | {1} & {2}\nПоженились {3}\n\n"
+            }
         }
     }
 }

@@ -73,7 +73,7 @@ module.exports =
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
-			const marriage = Marriage.create({ initiazer: interaction.user.id, target: member.user.id });
+			const marriage = Marriage.create({ initializer: interaction.user.id, target: member.user.id });
 			await marriage.save();
 
 			embed.setDescription( locale.embed.descriptionAccepted.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
