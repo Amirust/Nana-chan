@@ -14,29 +14,29 @@ Object.keys( IntentsBitField.Flags ).map( ( intent ) =>
 
 class Bot
 {
-    constructor({ token, mongo, config })
-    {
-        this.client = new Client({
-            intents,
-            presence: {
-                status: 'idle',
-                activities: [{
-                    name: 'за суперпозицией',
-                    type: 3
-                }]
-            },
-            partials: [ 'USER', 'CHANNEL', 'REACTION' ]
-        });
+	constructor({ token, mongo, config })
+	{
+		this.client = new Client({
+			intents,
+			presence: {
+				status: 'idle',
+				activities: [{
+					name: 'за суперпозицией',
+					type: 3
+				}]
+			},
+			partials: [ 'USER', 'CHANNEL', 'REACTION' ]
+		});
 
-        this.config = config;
-        this.store = {};
+		this.config = config;
+		this.store = {};
 
-        Object.defineProperties( this, {
+		Object.defineProperties( this, {
 			token: { value: token },
 			_mongo: { value: mongo }
 		});
 
-        fs.readdirSync( './src/events' ).filter( ( file ) => file.endsWith( '.js' ) ).forEach( ( file ) =>
+		fs.readdirSync( './src/events' ).filter( ( file ) => file.endsWith( '.js' ) ).forEach( ( file ) =>
 		{
 			const event = require( `../events/${file}` );
 			const name = file.split( '.' )[ 0 ];
@@ -53,34 +53,34 @@ class Bot
 		});
 
 		this.InteractionController = new InteractionController( this.commands );
-        this.IC = this.InteractionController; // Алиас
+		this.IC = this.InteractionController; // Алиас
 
 		this.client.on( 'interactionCreate', async ( interaction ) =>
 		{
 			await this.InteractionController.process( interaction );
 		});
-    }
+	}
 
-    async init()
-    {
-        console.log( 'Инициализация клиента...' );
-        await this.client.login( this.token );
+	async init()
+	{
+		console.log( 'Инициализация клиента...' );
+		await this.client.login( this.token );
 
-        if ( this._mongo )
+		if ( this._mongo )
 		{
 			this.mongo = await MongoClient.connect( this._mongo, { useUnifiedTopology: true });
 			console.log( 'База данных подключена' );
 		}
 
-        this.store.activeMarriesRequests = new Collection;
+		this.store.activeMarriesRequests = new Collection;
 
-        return this;
-    }
+		return this;
+	}
 
-    get db()
-    {
-        return this.mongo.db('Nana');
-    }
+	get db()
+	{
+		return this.mongo.db('Nana');
+	}
 }
 
 module.exports = Bot;
