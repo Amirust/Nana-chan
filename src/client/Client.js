@@ -72,8 +72,9 @@ class Bot
 			console.log( 'База данных подключена' );
 		}
 
-		this.store.activeMarriesRequests = new Collection;
-		this.store.activeDivorcesRequests = new Collection;
+		this.store.activeMarriesRequests = new Collection();
+		this.store.activeDivorcesRequests = new Collection();
+		this.store.activePartyCreationRequests = new Collection();
 
 		return this;
 	}

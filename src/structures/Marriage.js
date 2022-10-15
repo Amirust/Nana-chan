@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
-class Marriage {
+class Marriage 
+{
 	constructor(data)
 	{
 		this.id = data.id;

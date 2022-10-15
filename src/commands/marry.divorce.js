@@ -9,6 +9,7 @@ module.exports =
 	parentOf: 'marry',
 	async execute( interaction, locale )
 	{
+		rawlocale = locale;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 
 		// Проверка на то женат ли автор итерации
@@ -23,14 +24,14 @@ module.exports =
 		if ( bot.store.activeDivorcesRequests.has( interaction.user.id ) )
 		{
 			const request = bot.store.activeDivorcesRequests.get( interaction.user.id );
-			if ( !request.createdAt + 1000 * 60 * 10 < Date.now() )
+			if ( !request.createdAt + 1000 * 60 < Date.now() )
 			{
 				return interaction.reply({
-					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60 * 10), 'R' ) ]), 
+					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60), 'R' ) ]), 
 					ephemeral: true
 				});
 			}
-			else { bot.store.activeDivorcesRequests.delete( interaction.user.id ) }
+			else { bot.store.activeDivorcesRequests.delete( interaction.user.id ); }
 		}
 
 		const marriage = await Marriage.get( interaction.user.id );
@@ -49,11 +50,12 @@ module.exports =
 		const embed = new EmbedBuilder()
 			.setAuthor({ name: `${interaction.user.tag} 💔 ${member.user.tag}` })
 			.setColor( bot.config.colors.danger )
-			.setDescription( locale.embed.description.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) )
+			.setDescription( locale.embed.description.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
 
 		const buttonDivorceFn = async ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { return i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
+			console.log(`${i.replied} | ${i.id}`);
+			if ( i.user.id !== member.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
@@ -62,7 +64,7 @@ module.exports =
 			await marriage.delete();
 
 			i.update({ embeds: [embed], components: [] });
-		}
+		};
 
 		const row = new ActionRowBuilder()
 			.addComponents(

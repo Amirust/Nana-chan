@@ -2,7 +2,7 @@ class Console
 {
 	static black( str )
 	{
-		return `\x1b[30m${str}\x1b[0m`
+		return `\x1b[30m${str}\x1b[0m`;
 	}
 
 	static red( str )
@@ -43,4 +43,4 @@ class Console
 
 module.exports = {
 	Console
-}
+};

@@ -25,7 +25,7 @@ module.exports =
 			.setTitle( locale.embed.title.format([ interaction.guild.name ]) )
 			.setDescription( description )
 			.setColor( bot.config.colors.embedBorder )
-			.setThumbnail( interaction.guild.iconURL({ size: 512, dynamic: true }) )
+			.setThumbnail( interaction.guild.iconURL({ size: 512, dynamic: true }) );
         
 		return interaction.reply({ embeds: [embed] });
 	}

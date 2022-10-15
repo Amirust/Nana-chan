@@ -17,7 +17,7 @@ module.exports =
 			.setDescription( codeBlock( text ) );
 
 		await interaction.reply({ embeds: [embed] });
-		embed.setDescription( codeBlock( text + `\n✉️ MESSAGE   : ${Date.now() - time}ms` ) )
+		embed.setDescription( codeBlock( text + `\n✉️ MESSAGE   : ${Date.now() - time}ms` ) );
 
 		return interaction.editReply({ embeds: [embed] });
 	}

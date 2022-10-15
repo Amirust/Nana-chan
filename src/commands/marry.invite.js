@@ -9,6 +9,7 @@ module.exports =
 	parentOf: 'marry',
 	async execute( interaction, locale )
 	{
+		const errors = locale.errors;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 		const member = interaction.options.get( 'user' )?.member;
 
@@ -18,14 +19,14 @@ module.exports =
 		if ( bot.store.activeMarriesRequests.has( interaction.user.id ) )
 		{
 			const request = bot.store.activeMarriesRequests.get( interaction.user.id );
-			if ( !request.createdAt + 1000 * 60 * 10 < Date.now() )
+			if ( !request.createdAt + 1000 * 60 < Date.now() )
 			{
 				return interaction.reply({
-					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60 * 10), 'R' ), `<@${member.user.id}>` ]), 
+					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60), 'R' ), `<@${member.user.id}>` ]), 
 					ephemeral: true
 				});
 			}
-			else { bot.store.activeMarriesRequests.delete( interaction.user.id ) }
+			else { bot.store.activeMarriesRequests.delete( interaction.user.id ); }
 		}
 		// Проверка на то женат ли автор итерации
 		if ( await Marriage.isMarried( interaction.user.id ) )
@@ -65,11 +66,11 @@ module.exports =
 		const embed = new EmbedBuilder()
 			.setAuthor({ name: `${interaction.user.tag} ❤️ ${member.user.tag}` })
 			.setColor( bot.config.colors.danger )
-			.setDescription( locale.embed.description.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) )
+			.setDescription( locale.embed.description.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
 
 		const buttonAcceptFn = async ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { return i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
+			if ( i.user.id !== member.user?.id ) { return await i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
@@ -79,18 +80,18 @@ module.exports =
 			embed.setDescription( locale.embed.descriptionAccepted.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
 
 			i.update({ embeds: [embed], components: [] });
-		}
+		};
 
 		const buttonRejectFn = ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { return i.reply({ content: 'Не трогай то что не предназначено для тебя!', ephemeral: true }); }
+			if ( i.user.id !== member.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
 			embed.setDescription( locale.embed.descriptionRejected.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>`,  ]) );
 
 			i.update({ embeds: [embed], components: [] });
-		}
+		};
 
 		const row = new ActionRowBuilder()
 			.addComponents(

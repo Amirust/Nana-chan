@@ -24,6 +24,9 @@ class CommandsController
 		interaction = await interaction;
 		const command = this.getCommand( interaction.commandName );
 
+		// Альфа тест скам
+		if ( !bot.config.alphaTesters.includes( interaction.user.id ) ) { return interaction.reply({ content: 'Эта команда находится в альфа-тестировании и доступна только альфа-тестерам', ephemeral: true }); }
+
 		// Авто-комлпит
 		if ( interaction?.isAutocomplete() )
 		{
@@ -82,8 +85,8 @@ class CommandsController
 
 		if ( cmd.info?.type > 1 ) { delete cmd.info.description; }
 
-		if ( guild ) { return await bot.client.application.commands.create( cmd.info, guild ) }
-		else { return await bot.client.application.commands.create( cmd.info ) }
+		if ( guild ) { return await bot.client.application.commands.create( cmd.info, guild ); }
+		else { return await bot.client.application.commands.create( cmd.info ); }
 
 	}
 
@@ -92,8 +95,8 @@ class CommandsController
 		const commandId = /^[0-9]{17,19}$/gm.test( command ) ? command : ( await bot.client.application.commands.fetch() ).find( ( cmd ) => cmd.name === command ).id;
 		if ( !commandId ) { return 'Нету такой команды'; }
 
-		if ( guild ) { return await bot.client.application.commands.delete( commandId, guild ) }
-		else { return await bot.client.application.commands.delete( commandId ) }
+		if ( guild ) { return await bot.client.application.commands.delete( commandId, guild ); }
+		else { return await bot.client.application.commands.delete( commandId ); }
 	}
 
 	async sync( guild = null )
