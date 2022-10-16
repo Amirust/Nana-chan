@@ -32,7 +32,7 @@ module.exports =
 			else { bot.store.activePartyCreationRequests.delete( interaction.user.id ); }
 		}
 
-		const party = Party.create( interaction.user.id, name );
+		const party = await Party.create( interaction.user.id, name );
 		interaction.member.roles.add(party.roleId);
 		party.save();
 

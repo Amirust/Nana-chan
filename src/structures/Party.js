@@ -10,6 +10,7 @@ class Party
 		this.owner = data.owner;
 		this.status = data.status || 0; // 0 - Ожидает инициализации, 1 - Активна
 		this.roleId = data.roleId || null;
+		this.date = data.date;
 		this.meta = new PartyMeta(data.meta);
 	}
 
@@ -28,10 +29,10 @@ class Party
 		return !!( await bot.db.collection('parties').findOne({ owner: id }) );
 	}
 
-	static create( owner, name )
+	static async create( owner, name )
 	{
 		const id = (Date.now() % 1000000).toString(16);
-		const role = bot.client.guilds.cache.get('925061751211450380').roles.create({
+		const role = await bot.client.guilds.cache.get('925061751211450380').roles.create({
 			name: name
 		});
 		return new Party({ id, owner, name, date: Date.now(), roleId: role.id });
@@ -91,6 +92,7 @@ class Party
 			owner: this.owner,
 			status: this.status,
 			roleId: this.roleId,
+			date: this.date,
 			meta: this.meta.toJSON()
 		};
 	}

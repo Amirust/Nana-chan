@@ -52,7 +52,7 @@ class RenderableMD
 		return md;
 	}
 
-	toJSON ()
+	toJSON()
 	{
 		return this.md;
 	}

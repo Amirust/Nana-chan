@@ -23,18 +23,7 @@ module.exports = {
 			name: 'list',
 			description: 'Список партий',
 			type: 1
-		}, {
-			name: 'info',
-			description: 'Информация о партии',
-			type: 1,
-			options: [{
-				name: 'party',
-				description: 'Имя партии',
-				required: true,
-				autocomplete: true,
-				type: 3
-			}]
-		}, {
+		},{
 			name: 'invite',
 			description: 'Пригласить в партию',
 			type: 1,

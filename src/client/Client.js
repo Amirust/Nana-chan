@@ -50,7 +50,7 @@ class Bot
 		fs.readdirSync( './src/commands' ).filter( ( f ) => f.endsWith( '.js' ) ).forEach( ( file ) =>
 		{
 			const interaction = require( `../commands/${file}` );
-			this.commands.set( interaction.info.name, interaction );
+			this.commands.set( interaction.parentOf ? `${interaction.parentOf}.${interaction.info.name}` : interaction.info.name, interaction );
 		});
 
 		this.InteractionController = new InteractionController( this.commands );
