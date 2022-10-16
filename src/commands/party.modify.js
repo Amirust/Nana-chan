@@ -63,6 +63,8 @@ module.exports =
     
 		const descriptionModalHandler = async ( i ) =>
 		{
+			if ( i.user.id !== interaction.user.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+
 			party.meta.description = i.fields.getTextInputValue(`${interaction.id}.party.modify.description.input`);
 			i.reply({ content: locale.DescriptionSetSuccess, ephemeral: true });
 			await party.save();
@@ -71,10 +73,20 @@ module.exports =
 
 		const courseModalHandler = async ( i ) =>
 		{
+			if ( i.user.id !== interaction.user.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+
 			party.meta.course = i.fields.getTextInputValue(`${interaction.id}.party.modify.course.input`);
 			i.reply({ content: locale.CourseSetSuccess, ephemeral: true });
 			await party.save();
 			await returnToMenu( interaction );
+		};
+		const deleteModalHandler = async ( i ) =>
+		{
+			if ( i.user.id !== interaction.user.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+
+			await party.delete();
+			i.reply({ content: locale.DeleteSuccess, ephemeral: true });
+			await collector.stop('deleteAnyway');
 		};
     
 		const selectMenuHandler = async ( i ) =>
@@ -101,7 +113,7 @@ module.exports =
 			{
 				const modal = new ModalBuilder()
 					.setCustomId(`${interaction.id}.party.modify.description`)
-					.setTitle('Описание партии')
+					.setTitle(locale.init.modal.desctiptionTitle)
 					.setAction( descriptionModalHandler, collector );
     
 				const descriptionInput = new TextInputBuilder()
@@ -121,7 +133,7 @@ module.exports =
 			{
 				const modal = new ModalBuilder()
 					.setCustomId(`${interaction.id}.party.modify.course`)
-					.setTitle('Описание партии')
+					.setTitle(locale.init.modal.courseTitle)
 					.setAction( courseModalHandler, collector );
     
 				const courseInput = new TextInputBuilder()
@@ -133,6 +145,25 @@ module.exports =
 					.setMaxLength(50)
 					.setMinLength(10)
 					.setPlaceholder(locale.init.modal.coursePlaceholder);
+    
+				modal.addComponents(new ActionRowBuilder().addComponents( courseInput ));
+				await i.showModal(modal);
+			}
+			if ( i.values[0] === 'delete' )
+			{
+				const modal = new ModalBuilder()
+					.setCustomId(`${interaction.id}.party.modify.delete`)
+					.setTitle(locale.init.modal.deleteTitle)
+					.setAction( deleteModalHandler, collector );
+    
+				const courseInput = new TextInputBuilder()
+					.setCustomId(`${interaction.id}.party.modify.delete.input`)
+					.setLabel(locale.init.modal.deleteLabel)
+					.setStyle(TextInputStyle.Paragraph)
+					.setRequired(true)
+					.setMaxLength(party.name.length)
+					.setMinLength(party.name.length)
+					.setPlaceholder(locale.init.modal.deletePlaceholder);
     
 				modal.addComponents(new ActionRowBuilder().addComponents( courseInput ));
 				await i.showModal(modal);
