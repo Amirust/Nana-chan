@@ -33,6 +33,7 @@ module.exports =
 		}
 
 		const party = Party.create( interaction.user.id, name );
+		interaction.member.roles.add(party.roleId);
 		party.save();
 
 		const embed = new EmbedBuilder()

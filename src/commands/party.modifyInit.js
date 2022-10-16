@@ -103,7 +103,7 @@ module.exports = {
 						await m.delete();
 						await returnToMenu( interaction );
 					})
-					.catch( () => { i.followUp({ content: errors.TimeOut, ephemeral: true }); returnToMenu( i ); } );
+					.catch( () => { i.followUp({ content: errors.TimeOut, ephemeral: true }); returnToMenu( interaction ); } );
 			}
 			if ( i.values[0] === 'description' )
 			{

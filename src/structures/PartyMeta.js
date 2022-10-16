@@ -13,16 +13,26 @@ class PartyMeta
 {
 	constructor(data)
 	{
-		this.description = data?.description ? new RenderableMD({ md: data.description }) : null;
+		this._description = data?.description ? new RenderableMD({ md: data.description }) : null;
 		this.privacy = new Privacy(data?.privacy || 0);
 		this.icon = data?.icon || null;
 		this.course = data?.course || null;
 	}
 
+	get description()
+	{
+		return this._description;
+	}
+
+	set description( value )
+	{
+		this._description = new RenderableMD({ md: value });
+	}
+
 	toJSON()
 	{
 		return {
-			description: this.description,
+			description: this._description.toJSON(),
 			privacy: this.privacy.bitfield,
 			icon: this.icon,
 			course: this.course

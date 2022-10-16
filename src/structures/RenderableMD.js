@@ -1,7 +1,7 @@
 const defaultRules = [
 	{
 		regexp: /^# (.*$)/gim,
-		replace: '`**$1**`'
+		replace: '**`$1`**'
 	},
 	{
 		regexp: /^## (.*$)/gim,
@@ -54,9 +54,7 @@ class RenderableMD
 
 	toJSON ()
 	{
-		return {
-			md: this.md
-		};
+		return this.md;
 	}
 }
 
