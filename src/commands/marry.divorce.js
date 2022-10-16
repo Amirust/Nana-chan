@@ -54,7 +54,6 @@ module.exports =
 
 		const buttonDivorceFn = async ( i ) =>
 		{
-			console.log(`${i.replied} | ${i.id}`);
 			if ( i.user.id !== member.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');

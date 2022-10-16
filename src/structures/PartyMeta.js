@@ -13,11 +13,10 @@ class PartyMeta
 {
 	constructor(data)
 	{
-		this.description = data?.description || null;
+		this.description = data?.description ? new RenderableMD({ md: data.description }) : null;
 		this.privacy = new Privacy(data?.privacy || 0);
 		this.icon = data?.icon || null;
-		this.course = data?.course ? new RenderableMD(data.course) : null;
-		this.charter = data?.charter ? new RenderableMD(data.charter) : null;
+		this.course = data?.course || null;
 	}
 
 	toJSON()
@@ -26,8 +25,7 @@ class PartyMeta
 			description: this.description,
 			privacy: this.privacy.bitfield,
 			icon: this.icon,
-			course: this.course ? this.course.toJSON() : null,
-			charter: this.charter ? this.charter.toJSON() : null
+			course: this.course
 		};
 	}
 }

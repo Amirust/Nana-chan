@@ -40,41 +40,43 @@ class CommandsController
 		}
 
 		// Обычные команды
-		if ( !interaction?.isCommand() ) { return; }
-		if ( command.permissions?.length > 0 ) // Проверка прав
+		if ( interaction?.isChatInputCommand() )
 		{
-			if ( !interaction.member.permissions.toArray().every( ( p ) => command.permissions.includes( p ) ) && !interaction.member.permissions.has( 'Administrator' ) && !( interaction.guild.ownerId === interaction.member.id ) )
+			if ( command.permissions?.length > 0 ) // Проверка прав
 			{
-				const requiredPerms = [];
-				command.permissions.map( ( prop ) =>
-					requiredPerms.push( ruPermissions[ prop ] )
-				);
-				return interaction.reply({ content: `<:firewall:1028383375444168815> У вас нет на это требуемых прав!\nТребуемые права: ${requiredPerms.map( ( prop ) =>
+				if ( !interaction.member.permissions.toArray().every( ( p ) => command.permissions.includes( p ) ) && !interaction.member.permissions.has( 'Administrator' ) && !( interaction.guild.ownerId === interaction.member.id ) )
 				{
-					return `\`${prop}\``;
-				}).join( ', ' )} // Вам не хватает: ${requiredPerms.filter( ( prop ) => !interaction.member.permissions.toArray().includes( prop ) ).map( ( prop ) =>
-				{
-					return `\`${prop}\``;
-				}).join( ', ' )}`, ephemeral: true });
+					const requiredPerms = [];
+					command.permissions.map( ( prop ) =>
+						requiredPerms.push( ruPermissions[ prop ] )
+					);
+					return interaction.reply({ content: `<:firewall:1028383375444168815> У вас нет на это требуемых прав!\nТребуемые права: ${requiredPerms.map( ( prop ) =>
+					{
+						return `\`${prop}\``;
+					}).join( ', ' )} // Вам не хватает: ${requiredPerms.filter( ( prop ) => !interaction.member.permissions.toArray().includes( prop ) ).map( ( prop ) =>
+					{
+						return `\`${prop}\``;
+					}).join( ', ' )}`, ephemeral: true });
+				}
 			}
-		}
 
-		try
-		{
-			if ( interaction.options?.getSubcommand( false ) !== null )
+			try
 			{
-				const subcommand = this.getSubCommand( interaction.commandName, interaction.options.getSubcommand() );
-				if ( subcommand ) { return await subcommand.execute( interaction, localizator( locale ) ); }
-			} 
+				if ( interaction.options?.getSubcommand( false ) !== null )
+				{
+					const subcommand = this.getSubCommand( interaction.commandName, interaction.options.getSubcommand() );
+					if ( subcommand ) { return await subcommand.execute( interaction, localizator( locale ) ); }
+				}
 
-			return await command.execute( interaction, localizator( locale ) );
-		}
-		catch ( e )
-		{
-			console.log( e );
-			return interaction.replied ?
-				interaction.editReply({ content: `Произошла ошибка!\n\`\`\`js\nSlashCommand ERROR\nCommand: ${interaction.commandName}\n${e.stack}\`\`\``, ephemeral: true }) :
-				interaction.reply({ content: `Произошла ошибка!\n\`\`\`js\nSlashCommand ERROR\nCommand: ${interaction.commandName}\n${e.stack}\`\`\``, ephemeral: true });
+				return await command.execute( interaction, localizator( locale ) );
+			}
+			catch ( e )
+			{
+				console.log( e );
+				return interaction.replied ?
+					interaction.editReply({ content: `Произошла ошибка!\n\`\`\`js\nSlashCommand ERROR\nCommand: ${interaction.commandName}\n${e.stack}\`\`\``, ephemeral: true }) :
+					interaction.reply({ content: `Произошла ошибка!\n\`\`\`js\nSlashCommand ERROR\nCommand: ${interaction.commandName}\n${e.stack}\`\`\``, ephemeral: true });
+			}
 		}
 	}
 

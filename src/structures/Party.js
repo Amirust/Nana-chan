@@ -85,6 +85,7 @@ class Party
 			name: this.name,
 			members: this.members,
 			owner: this.owner,
+			status: this.status,
 			meta: this.meta.toJSON()
 		};
 	}

@@ -25,7 +25,7 @@ module.exports =
 		// Проверка на то не инициальный ли это вызов команды
 		if ( party.status === 0 )
 		{
-			modifyInit.execute( interaction, locale, party );
+			return await modifyInit.execute( interaction, locale, errors, party );
 		}
 
 		const row = new ActionRowBuilder()
