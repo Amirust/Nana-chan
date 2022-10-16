@@ -8,6 +8,7 @@ class Party
 		this.name = data.name;
 		this.members = data.members || []; // Array<Snowflake>
 		this.owner = data.owner;
+		this.status = data.status || 0; // 0 - Ожидает инициализации, 1 - Активна
 		this.meta = new PartyMeta(data.meta);
 	}
 
@@ -21,6 +22,11 @@ class Party
 		return !!( await bot.db.collection('parties').findOne({ name }) );
 	}
 
+	static async isOwner( id )
+	{
+		return !!( await bot.db.collection('parties').findOne({ owner: id }) );
+	}
+
 	static create( owner, name )
 	{
 		const id = (Date.now() % 1000000).toString(16);
@@ -31,7 +37,7 @@ class Party
 	{
 		if ( /^[0-9]{17,19}$/gm.test(id) )
 		{
-			return new Party( await bot.db.collection('parties').findOn({ $or: [ { owner: id }, { members: { $regex: id } } ] }) );
+			return new Party( await bot.db.collection('parties').findOne({ $or: [ { owner: id }, { members: { $regex: id } } ] }) );
 		}
 		return await new Party( await bot.db.collection('parties').findOne({ id }) );
 	}

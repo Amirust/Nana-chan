@@ -29,18 +29,9 @@ const config = require('./config.json');
 		config
 	});
 
-	process.on('unhandledRejection', (err) => 
-	{
-		null;
-	});
-	process.on('uncaughtException', (err) => 
-	{
-		null;
-	});
-	process.on('uncaughtExceptionMonitor', (err) => 
-	{
-		null;
-	});
+	process.on('unhandledRejection', console.error);
+	process.on('uncaughtException', console.error);
+	process.on('uncaughtExceptionMonitor', console.error);
 	process.on('multipleResolves', (type, promise, reason) => 
 	{
 		null;

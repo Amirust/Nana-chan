@@ -5,6 +5,7 @@ const InteractionController = require('../controllers/interaction.controller');
 
 require('../structures/Button'); // Модификация прототипа Button
 require('../structures/SelectMenu'); // Модификация прототипа SelectMenu
+require('../structures/Modal'); // Модификация прототипа Modal
 
 const intents = new IntentsBitField();
 Object.keys( IntentsBitField.Flags ).map( ( intent ) =>
