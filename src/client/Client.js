@@ -75,7 +75,7 @@ class Bot
 
 		this.store.activeMarriesRequests = new Collection();
 		this.store.activeDivorcesRequests = new Collection();
-		this.store.activePartyCreationRequests = new Collection();
+		this.store.activePartyInvites = new Collection();
 
 		return this;
 	}

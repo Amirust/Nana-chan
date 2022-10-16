@@ -54,6 +54,7 @@ class Party
 
 	async delete()
 	{
+		await bot.client.guilds.cache.get('925061751211450380').roles.delete(this.roleId);
 		return await bot.db.collection('parties').deleteOne({ id: this.id });
 	}
 

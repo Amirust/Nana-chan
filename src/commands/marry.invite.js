@@ -90,6 +90,7 @@ module.exports =
 
 			embed.setDescription( locale.embed.descriptionRejected.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>`,  ]) );
 
+			bot.store.activeMarriesRequests.delete( interaction.user.id );
 			i.update({ embeds: [embed], components: [] });
 		};
 

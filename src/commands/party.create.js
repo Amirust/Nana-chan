@@ -18,19 +18,6 @@ module.exports =
 		if ( await Party.isPartyMember( interaction.member.id ) ) { return interaction.reply({ content: locale.AlreadyInParty, ephemeral: true }); }
 		// Проверка на существование партии с таким именем
 		if ( await Party.isNameOccupied( name ) ) { return interaction.reply({ content: locale.PartyNameOccupied, ephemeral: true }); }
-		// Проверка на то есть ли у автора итерации активные запросы на создание партии
-		if ( bot.store.activePartyCreationRequests.has( interaction.user.id ) )
-		{
-			const request = bot.store.activePartyCreationRequests.get( interaction.user.id );
-			if ( !request.createdAt + 1000 * 60 < Date.now() )
-			{
-				return interaction.reply({
-					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60), 'R' ) ]), 
-					ephemeral: true
-				});
-			}
-			else { bot.store.activePartyCreationRequests.delete( interaction.user.id ); }
-		}
 
 		const party = await Party.create( interaction.user.id, name );
 		interaction.member.roles.add(party.roleId);

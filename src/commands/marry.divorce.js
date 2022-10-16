@@ -61,7 +61,7 @@ module.exports =
 			embed.setDescription( locale.embed.descriptionAccepted.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>`, time( new Date(marriage.date), 'R' ) ]) );
 
 			await marriage.delete();
-
+			bot.store.activeDivorcesRequests.delete( interaction.user.id );
 			i.update({ embeds: [embed], components: [] });
 		};
 
