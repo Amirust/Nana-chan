@@ -26,7 +26,7 @@ module.exports =
 		});
 
 		let page = 0;
-		const pages = chunk( parties, 2 );
+		const pages = chunk( parties, 10 );
 
 		const listPrevFn = async ( i ) =>
 		{
@@ -172,7 +172,7 @@ module.exports =
 				{
 					return await i.update({ embeds: [ embed ], components: [row] });
 				}
-				return interaction.replied || interaction.deferred  || interaction.deferred ?
+				return interaction.replied || interaction.deferred ?
 					await interaction.editReply({ embeds: [embed], components: [row] }) :
 					await interaction.reply({ embeds: [embed], components: [row] });
 			}
