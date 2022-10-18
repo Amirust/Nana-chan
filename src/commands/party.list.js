@@ -15,6 +15,11 @@ module.exports =
 		const dbParties = await bot.db.collection('parties').find().toArray();
 		const parties = dbParties.filter( p => p.status !== 0 ).map( m => new Party( m ) );
 
+        if ( parties.length <= 0 )
+        {
+            return interaction.reply({ content: locale.NoParties, ephemeral: true });
+        }
+
         const message = await interaction.deferReply();
 
         const collector = await message.createMessageComponentCollector({
