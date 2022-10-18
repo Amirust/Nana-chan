@@ -25,7 +25,7 @@ class CommandsController
 		const command = this.getCommand( interaction.commandName );
 
 		// Альфа тест скам
-		if ( !bot.config.alphaTesters.includes( interaction.user.id ) ) { return interaction.reply({ content: 'Эта команда находится в альфа-тестировании и доступна только альфа-тестерам', ephemeral: true }); }
+        // if ( !bot.config.alphaTesters.includes( interaction.user.id ) ) { return interaction.reply({ content: 'Эта команда находится в альфа-тестировании и доступна только альфа-тестерам', ephemeral: true }); }
 
 		// Авто-комлпит
 		if ( interaction?.isAutocomplete() )

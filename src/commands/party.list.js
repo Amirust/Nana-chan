@@ -15,7 +15,9 @@ module.exports =
 		const dbParties = await bot.db.collection('parties').find().toArray();
 		const parties = dbParties.filter( p => p.status !== 0 ).map( m => new Party( m ) );
 
-		const collector = interaction.channel.createMessageComponentCollector({
+        const message = await interaction.deferReply();
+
+        const collector = await message.createMessageComponentCollector({
 			idle: 60000
 		});
 		collector.on( 'end', ( collected, reason ) =>
@@ -34,7 +36,6 @@ module.exports =
 			if ( page > 0 )
 			{
 				page--;
-				description = locale.embed.description.format([ parties.length ]);
 				await renderPage(i, true);
 			}
 		};
@@ -47,7 +48,6 @@ module.exports =
 			if ( page < pages.length - 1 )
 			{
 				page++;
-				description = locale.embed.description.format([ parties.length ]);
 				await renderPage(i, true);
 			}
 		};
@@ -73,8 +73,8 @@ module.exports =
 			}
 			if ( party.meta.privacy.has('Members') )
 			{
-				party.members.push( party.owner );
-				infoDescription += locale.info.members.format([ party.members.length, party.members.map( m => `<@${m}>` ).join(', ') ]) + '\n';
+                const members = party.members.concat([ party.owner ]);
+				infoDescription += locale.info.members.format([ members.length, members.map( m => `<@${m}>` ).join(', ') ]) + '\n';
 			}
 
 			infoDescription += `\n${ party.meta.description.render() }`;
@@ -92,7 +92,6 @@ module.exports =
 						.setCustomId( `${interaction.id}.back.to.list` )
 						.setLabel( locale.info.back )
 						.setStyle('Primary')
-						.setAction( buttonBackToListFn, collector )
 				);
 
 			return i.update({ embeds: [embed], components: [row] });
@@ -140,7 +139,6 @@ module.exports =
 								};
 							} )
 						)
-						.setAction( renderPartyInfo, collector )
 				);
 
 			const buttonsRow = new ActionRowBuilder()
@@ -149,15 +147,13 @@ module.exports =
 						.setCustomId(`${interaction.id}.party-list-prev`)
 						.setEmoji('⬅️')
 						.setStyle('Primary')
-						.setDisabled(page === 0)
-						.setAction( listPrevFn, collector ),
+						.setDisabled(page === 0),
 
 					new ButtonBuilder()
 						.setCustomId(`${interaction.id}.party-list-next`)
 						.setEmoji('➡️')
 						.setStyle('Primary')
 						.setDisabled(page === pages.length - 1)
-						.setAction( listNextFn, collector )
 				);
 
 			if (pages.length > 1)
@@ -166,7 +162,7 @@ module.exports =
 				{
 					return await i.update({ embeds: [ embed ], components: [ row, buttonsRow ] });
 				}
-				return interaction.replied ?
+				return interaction.replied || interaction.deferred  ?
 					await interaction.editReply({ embeds: [embed], components: [row, buttonsRow] }) :
 					await interaction.reply({ embeds: [embed], components: [row, buttonsRow] });
 			}
@@ -176,13 +172,25 @@ module.exports =
 				{
 					return await i.update({ embeds: [ embed ], components: [row] });
 				}
-				return interaction.replied ?
+				return interaction.replied || interaction.deferred  || interaction.deferred ?
 					await interaction.editReply({ embeds: [embed], components: [row] }) :
 					await interaction.reply({ embeds: [embed], components: [row] });
 			}
 		};
-        
-        
+
+        collector.on('collect', async (i) =>
+        {
+            // Кнопачки пагинатора
+            if ( i.customId === `${interaction.id}.party-list-prev` ) { await listPrevFn(i); }
+            if ( i.customId === `${interaction.id}.party-list-next` ) { await listNextFn(i); }
+
+            // Селект меню списка партий
+            if ( i.customId === `${interaction.id}.party-list` ) { await renderPartyInfo(i); }
+
+            // Возврат из инфо
+            if ( i.customId === `${interaction.id}.back.to.list` ) { await buttonBackToListFn(i); }
+        });
+
 		return await renderPage( interaction );
 	}
 };
