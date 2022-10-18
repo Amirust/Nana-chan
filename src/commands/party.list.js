@@ -26,7 +26,7 @@ module.exports =
 		});
 
 		let page = 0;
-		const pages = chunk( parties, 10 );
+		const pages = chunk( parties, 5 );
 
 		const listPrevFn = async ( i ) =>
 		{
