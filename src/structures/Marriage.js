@@ -25,9 +25,11 @@ class Marriage
 	{
 		if ( /^[0-9]{17,19}$/gm.test(id) )
 		{
-			return new Marriage( await bot.db.collection('marriages').findOne({ $or: [ { initializer: id }, { target: id } ] }) );
+			const marriage = await bot.db.collection('marriages').findOne({ $or: [ { initializer: id }, { target: id } ] });
+			return marriage ? new Marriage( marriage ) : null;
 		}
-		return await new Marriage( await bot.db.collection('marriages').findOne({ id }) );
+		const marriage = await bot.db.collection('marriages').findOne({ id });
+		return marriage ? new Marriage( marriage ) : null;
 	}
 
 	async save()

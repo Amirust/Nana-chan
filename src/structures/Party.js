@@ -42,9 +42,11 @@ class Party
 	{
 		if ( /^[0-9]{17,19}$/gm.test(id) )
 		{
-			return new Party( await bot.db.collection('parties').findOne({ $or: [ { owner: id }, { members: { $regex: id } } ] }) );
+			const party = await bot.db.collection('parties').findOne({ $or: [ { owner: id }, { members: { $regex: id } } ] });
+			return party ? new Party( party ) : null;
 		}
-		return await new Party( await bot.db.collection('parties').findOne({ id }) );
+		const party = await bot.db.collection('parties').findOne({ id });
+		return party ? new Party( party ) : null;
 	}
 
 	async save()
