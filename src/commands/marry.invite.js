@@ -12,7 +12,7 @@ module.exports =
 		const errors = locale.errors;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 		const member = interaction.options.get( 'user' )?.member;
-        await interaction.guild.members.fetch( member?.id );
+		await interaction.guild.members.fetch( member?.id );
 
 		// Проверка на то есть ли участник переданный в аргументе user на сервере
 		if ( !member ) { return interaction.reply({ content: locale.NoUser, ephemeral: true }); }
@@ -20,7 +20,7 @@ module.exports =
 		if ( bot.store.activeMarriesRequests.has( interaction.user.id ) )
 		{
 			const request = bot.store.activeMarriesRequests.get( interaction.user.id );
-            if ( !(request.createdAt + 1000 * 60 < Date.now()) )
+			if ( !(request.createdAt + 1000 * 60 < Date.now()) )
 			{
 				return interaction.reply({
 					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60), 'R' ), `<@${request.target}>` ]), 
@@ -64,7 +64,7 @@ module.exports =
 
 		bot.store.activeMarriesRequests.set( interaction.user.id, { createdAt: Date.now(), target: member.user.id } );
 
-        const { target } = bot.store.activeMarriesRequests.get( interaction.user.id );
+		const { target } = bot.store.activeMarriesRequests.get( interaction.user.id );
 
 		const embed = new EmbedBuilder()
 			.setAuthor({ name: `${interaction.user.tag} ❤️ ${member.user.tag}` })
@@ -73,7 +73,7 @@ module.exports =
 
 		const buttonAcceptFn = async ( i ) =>
 		{
-            if ( i.user.id !== target ) { return await i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== target ) { return await i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
@@ -82,13 +82,13 @@ module.exports =
 
 			embed.setDescription( locale.embed.descriptionAccepted.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
 
-            bot.store.activeMarriesRequests.delete( interaction.user.id );
+			bot.store.activeMarriesRequests.delete( interaction.user.id );
 			i.update({ embeds: [embed], components: [] });
 		};
 
 		const buttonRejectFn = ( i ) =>
 		{
-            if ( i.user.id !== target ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== target ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 

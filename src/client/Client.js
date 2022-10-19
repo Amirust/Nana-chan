@@ -31,6 +31,7 @@ class Bot
 
 		this.config = config;
 		this.store = {};
+		this.cooldowns = {};
 
 		Object.defineProperties( this, {
 			token: { value: token },
@@ -76,6 +77,8 @@ class Bot
 		this.store.activeMarriesRequests = new Collection();
 		this.store.activeDivorcesRequests = new Collection();
 		this.store.activePartyInvites = new Collection();
+
+		this.cooldowns.reputation = new Collection();
 
 		return this;
 	}

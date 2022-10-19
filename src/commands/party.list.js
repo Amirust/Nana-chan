@@ -15,14 +15,14 @@ module.exports =
 		const dbParties = await bot.db.collection('parties').find().toArray();
 		const parties = dbParties.filter( p => p.status !== 0 ).map( m => new Party( m ) );
 
-        if ( parties.length <= 0 )
-        {
-            return interaction.reply({ content: locale.NoParties, ephemeral: true });
-        }
+		if ( parties.length <= 0 )
+		{
+			return interaction.reply({ content: locale.NoParties, ephemeral: true });
+		}
 
-        const message = await interaction.deferReply();
+		const message = await interaction.deferReply();
 
-        const collector = await message.createMessageComponentCollector({
+		const collector = await message.createMessageComponentCollector({
 			idle: 60000
 		});
 		collector.on( 'end', ( collected, reason ) =>
@@ -78,7 +78,7 @@ module.exports =
 			}
 			if ( party.meta.privacy.has('Members') )
 			{
-                const members = party.members.concat([ party.owner ]);
+				const members = party.members.concat([ party.owner ]);
 				infoDescription += locale.info.members.format([ members.length, members.map( m => `<@${m}>` ).join(', ') ]) + '\n';
 			}
 
@@ -183,18 +183,18 @@ module.exports =
 			}
 		};
 
-        collector.on('collect', async (i) =>
-        {
-            // Кнопачки пагинатора
-            if ( i.customId === `${interaction.id}.party-list-prev` ) { await listPrevFn(i); }
-            if ( i.customId === `${interaction.id}.party-list-next` ) { await listNextFn(i); }
+		collector.on('collect', async (i) =>
+		{
+			// Кнопачки пагинатора
+			if ( i.customId === `${interaction.id}.party-list-prev` ) { await listPrevFn(i); }
+			if ( i.customId === `${interaction.id}.party-list-next` ) { await listNextFn(i); }
 
-            // Селект меню списка партий
-            if ( i.customId === `${interaction.id}.party-list` ) { await renderPartyInfo(i); }
+			// Селект меню списка партий
+			if ( i.customId === `${interaction.id}.party-list` ) { await renderPartyInfo(i); }
 
-            // Возврат из инфо
-            if ( i.customId === `${interaction.id}.back.to.list` ) { await buttonBackToListFn(i); }
-        });
+			// Возврат из инфо
+			if ( i.customId === `${interaction.id}.back.to.list` ) { await buttonBackToListFn(i); }
+		});
 
 		return await renderPage( interaction );
 	}

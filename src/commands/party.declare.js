@@ -44,15 +44,15 @@ module.exports = {
 				type: 6
 			}]
 		}, {
-            name: 'user',
-            description: 'Получить партию юзера',
-            type: 1,
-            options: [{
-                name: 'user',
-                description: 'Пользователь',
-                required: false,
-                type: 6
-            }]
-        }]
+			name: 'user',
+			description: 'Получить партию юзера',
+			type: 1,
+			options: [{
+				name: 'user',
+				description: 'Пользователь',
+				required: false,
+				type: 6
+			}]
+		}]
 	}
 };
