@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, time } = require('discord.js');
 const Party = require('../structures/Party');
+const UserReputation = require('../structures/UserReputation');
 const chunk = require('../utils/chunk');
 
 module.exports =
@@ -69,17 +70,21 @@ module.exports =
 		{
 			const id = i.values[0];
 			const party = parties.find( p => p.id === id );
+			const members = party.members.concat([ party.owner ]);
+
+			const reputations = await UserReputation.getMany(members);
+			const reputationSum = reputations.reduce((acc, cur) => acc + Number(cur.reputation), 0);
+
 			if ( !party ) { return i.reply({ content: errors.NotFound, ephemeral: true }); }
 
-			let infoDescription = locale.info.description.format([ time( new Date(party.date), 'R' ) ]);
+			let infoDescription = locale.info.description.format( [ time( new Date(party.date), 'R' ), reputationSum ]);
 			if ( party.meta.privacy.has('Owner') )
 			{
 				infoDescription += locale.info.owner.format([ `<@${party.owner}>` ]);
 			}
 			if ( party.meta.privacy.has('Members') )
 			{
-				const members = party.members.concat([ party.owner ]);
-				infoDescription += locale.info.members.format([ members.length, members.map( m => `<@${m}>` ).join(', ') ]) + '\n';
+				infoDescription += locale.info.members.format([ members.length, members.map( m => `[${reputations.find(rec => rec.id === m).reputation}] <@${m}>` ).join(', ') ]) + '\n';
 			}
 
 			infoDescription += `\n${ party.meta.description.render() }`;

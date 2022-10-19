@@ -53,6 +53,10 @@ module.exports = {
 				required: false,
 				type: 6
 			}]
+		}, {
+			name: 'leave',
+			description: 'Уйти из партии',
+			type: 1
 		}]
 	}
 };

@@ -1,5 +1,6 @@
 const { EmbedBuilder, time } = require('discord.js');
 const Party = require('../structures/Party');
+const UserReputation = require('../structures/UserReputation');
 
 module.exports =
 {
@@ -21,16 +22,20 @@ module.exports =
 		}
 
 		const party = await Party.get( member.id );
+		const members = party.members.concat([ party.owner ]);
 
-		let infoDescription = locale.embed.description.format([ time( new Date(party.date), 'R' ) ]);
+		const reputations = await UserReputation.getMany(members);
+		const reputationSum = reputations.reduce((acc, cur) => acc + Number(cur.reputation), 0);
+
+
+		let infoDescription = locale.embed.description.format([ time( new Date(party.date), 'R' ), reputationSum ]);
 		if ( party.meta.privacy.has('Owner') )
 		{
 			infoDescription += locale.embed.owner.format([ `<@${party.owner}>` ]);
 		}
 		if ( party.meta.privacy.has('Members') )
 		{
-			const members = party.members.concat([ party.owner ]);
-			infoDescription += locale.embed.members.format([ members.length, members.map( m => `<@${m}>` ).join(', ') ]) + '\n';
+			infoDescription += locale.embed.members.format([ members.length, members.map( m => `[${reputations.find(rec => rec.id === m).reputation}] <@${m}>` ).join(', ') ]) + '\n';
 		}
 
 		infoDescription += `\n${ party.meta.description.render() }`;
