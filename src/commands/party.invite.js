@@ -46,7 +46,7 @@ module.exports =
 		if ( bot.store.activePartyInvites.has(member.id) )
 		{
 			const request = bot.store.activePartyInvites.get(member.id);
-			if ( !request.createdAt + 1000 * 60 < Date.now() )
+			if ( !(request.createdAt + 1000 * 60 < Date.now()) )
 			{
 				if ( request.requester === party.name )
 					return interaction.reply({

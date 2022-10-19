@@ -20,10 +20,10 @@ module.exports =
 		if ( bot.store.activeMarriesRequests.has( interaction.user.id ) )
 		{
 			const request = bot.store.activeMarriesRequests.get( interaction.user.id );
-			if ( !request.createdAt + 1000 * 60 < Date.now() )
+            if ( !(request.createdAt + 1000 * 60 < Date.now()) )
 			{
 				return interaction.reply({
-					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60), 'R' ), `<@${member.user.id}>` ]), 
+					content: locale.AlreadyHasRequest.format([ time( new Date(request.createdAt + 1000 * 60), 'R' ), `<@${request.target}>` ]), 
 					ephemeral: true
 				});
 			}
