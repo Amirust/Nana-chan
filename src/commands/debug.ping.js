@@ -19,6 +19,11 @@ module.exports =
 		await interaction.reply({ embeds: [embed] });
 		embed.setDescription( codeBlock( text + `\n✉️ MESSAGE   : ${Date.now() - time}ms` ) );
 
-		return interaction.editReply({ embeds: [embed] });
+        const embed2 = new EmbedBuilder()
+            .setAuthor({ name: 'Дополнительная информация' })
+            .setColor( bot.config.colors.primary )
+            .setDescription( codeBlock(`⏰ UPTIME   : ${bot.client.uptime / 1000}ms\n🦦 MEM_USE   : ${ ( process.memoryUsage().heapUsed / 1024 / 1024 ).toFixed( 1 ) }Mb`) );
+
+		return interaction.editReply({ embeds: [embed, embed2] });
 	}
 };
