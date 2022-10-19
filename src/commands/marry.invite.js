@@ -12,6 +12,7 @@ module.exports =
 		const errors = locale.errors;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 		const member = interaction.options.get( 'user' )?.member;
+        await interaction.guild.members.fetch( member.id );
 
 		// Проверка на то есть ли участник переданный в аргументе user на сервере
 		if ( !member ) { return interaction.reply({ content: locale.NoUser, ephemeral: true }); }
@@ -52,7 +53,7 @@ module.exports =
 		if ( member.user.id === bot.client.user.id ) { return interaction.reply({ files: [ 'https://media.discordapp.net/attachments/1028698444388368495/1028698549447294986/Jg9M0Uo.gif' ], ephemeral: true }); }
 		// Проверка на то бот ли участник переданный в аргументе user
 		if ( member.user.bot ) { return interaction.reply({ content: locale.CantLoveBot, ephemeral: true }); }
-        
+
 		const collector = interaction.channel.createMessageComponentCollector({
 			idle: 60000
 		});
@@ -63,6 +64,8 @@ module.exports =
 
 		bot.store.activeMarriesRequests.set( interaction.user.id, { createdAt: Date.now(), target: member.user.id } );
 
+        const { target } = bot.store.activeMarriesRequests.get( interaction.user.id );
+
 		const embed = new EmbedBuilder()
 			.setAuthor({ name: `${interaction.user.tag} ❤️ ${member.user.tag}` })
 			.setColor( bot.config.colors.danger )
@@ -70,7 +73,7 @@ module.exports =
 
 		const buttonAcceptFn = async ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { return await i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+            if ( i.user.id !== target ) { return await i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 
@@ -79,12 +82,13 @@ module.exports =
 
 			embed.setDescription( locale.embed.descriptionAccepted.format([ `<@${interaction.user.id}>`, `<@${member.user.id}>` ]) );
 
+            bot.store.activeMarriesRequests.delete( interaction.user.id );
 			i.update({ embeds: [embed], components: [] });
 		};
 
 		const buttonRejectFn = ( i ) =>
 		{
-			if ( i.user.id !== member.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+            if ( i.user.id !== target ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 			collector.stop('success');
 

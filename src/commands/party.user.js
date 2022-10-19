@@ -12,6 +12,7 @@ module.exports =
         locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 
         const member = interaction.options.get('user')?.member || interaction.member;
+        await interaction.guild.members.fetch( member.id );
 
         // Проверка на то есть ли партия у переданного юзера
         if ( !(await Party.isPartyMember( member.id )) )
