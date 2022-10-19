@@ -13,7 +13,7 @@ module.exports =
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 
 		const member = interaction.options.get('user')?.member;
-        await interaction.guild.members.fetch( member.id );
+        await interaction.guild.members.fetch( member?.id );
 
 		// Проверка на то есть ли пользователь на сервере
 		if ( !member )

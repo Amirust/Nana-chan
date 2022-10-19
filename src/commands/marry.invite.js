@@ -12,7 +12,7 @@ module.exports =
 		const errors = locale.errors;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 		const member = interaction.options.get( 'user' )?.member;
-        await interaction.guild.members.fetch( member.id );
+        await interaction.guild.members.fetch( member?.id );
 
 		// Проверка на то есть ли участник переданный в аргументе user на сервере
 		if ( !member ) { return interaction.reply({ content: locale.NoUser, ephemeral: true }); }
