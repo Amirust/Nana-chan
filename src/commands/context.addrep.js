@@ -38,7 +38,7 @@ module.exports =
 		const member = await interaction.guild.members.fetch( interaction.targetId );
 		const reputation = await UserReputation.get(member.id);
 
-		await reputation.add();
+		reputation.add();
 		await reputation.save();
 
 		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() } );

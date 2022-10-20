@@ -23,12 +23,12 @@ class UserReputation
 		});
 	}
 
-	async add( count = 1 )
+	add( count = 1 )
 	{
 		this.reputation += count;
 	}
 
-	async remove( count = 1 )
+	remove( count = 1 )
 	{
 		this.reputation -= count;
 	}
