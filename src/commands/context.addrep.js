@@ -19,7 +19,7 @@ module.exports =
 
 		if ( !interaction.member.roles.cache.has('925061751572144199') )
 		{
-			//			return interaction.reply({ content: locale.NoPermissions, ephemeral: true });
+			return interaction.reply({ content: locale.NoPermissions, ephemeral: true });
 		}
 
 		if ( bot.cooldowns.reputation.has( interaction.user.id ) )
