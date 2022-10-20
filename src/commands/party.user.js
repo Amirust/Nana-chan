@@ -28,7 +28,7 @@ module.exports =
 		const reputationSum = reputations.reduce((acc, cur) => acc + Number(cur.reputation), 0);
 
 
-		let infoDescription = locale.embed.description.format([ time( new Date(party.date), 'R' ), reputationSum ]);
+        let infoDescription = locale.embed.description.format([ time( new Date(party.date), 'R' ), party.meta.course, reputationSum ]);
 		if ( party.meta.privacy.has('Owner') )
 		{
 			infoDescription += locale.embed.owner.format([ `<@${party.owner}>` ]);
