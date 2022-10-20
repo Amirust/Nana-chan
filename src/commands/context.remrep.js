@@ -17,7 +17,7 @@ module.exports =
 			return interaction.reply({ content: locale.CantSetRepToSelf, ephemeral: true });
 		}
 
-		if ( !interaction.member.roles.cache.has('925061751572144199') )
+        if ( !interaction.member.roles.cache.has('925061751563776016') )
 		{
 			return interaction.reply({ content: locale.NoPermissions, ephemeral: true });
 		}
