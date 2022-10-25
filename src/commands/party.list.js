@@ -77,7 +77,7 @@ module.exports =
 
 			if ( !party ) { return i.reply({ content: errors.NotFound, ephemeral: true }); }
 
-            let infoDescription = locale.info.description.format( [ time( new Date(party.date), 'R' ), party.meta.course, reputationSum]);
+			let infoDescription = locale.info.description.format( [ time( new Date(party.date), 'R' ), party.meta.course, reputationSum]);
 			if ( party.meta.privacy.has('Owner') )
 			{
 				infoDescription += locale.info.owner.format([ `<@${party.owner}>` ]);

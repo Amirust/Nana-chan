@@ -17,7 +17,7 @@ module.exports =
 			return interaction.reply({ content: locale.CantSetRepToSelf, ephemeral: true });
 		}
 
-        if ( !interaction.member.roles.cache.has('925061751563776016') )
+		if ( !interaction.member.roles.cache.has('925061751563776016') )
 		{
 			return interaction.reply({ content: locale.NoPermissions, ephemeral: true });
 		}
@@ -35,13 +35,13 @@ module.exports =
 			else { bot.cooldowns.reputation.delete( interaction.user.id ); }
 		}
 
-		const member = await interaction.guild.members.fetch( interaction.targetId );
-		const reputation = await UserReputation.get(member.id);
+		const user = await bot.client.users.fetch( interaction.targetId );
+		const reputation = await UserReputation.get(user.id);
 
 		reputation.add();
 		await reputation.save();
 
 		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() } );
-        return interaction.reply({ content: locale.Success.format([ `<@${member.id}>`, reputation.reputation ]) });
+		return interaction.reply({ content: locale.Success.format([ `<@${user.id}>`, reputation.reputation ]) });
 	}
 };
