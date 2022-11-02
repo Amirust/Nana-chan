@@ -1,6 +1,6 @@
 const Bot = require( './src/client/Client' );
 const { Console } = require( './src/utils/colors' );
-const config = require('./config.json');
+const config = require( './config.json' );
 
 ( async () =>
 {
@@ -20,7 +20,7 @@ const config = require('./config.json');
 	if ( ![ 'MONGO', 'NANA_TOKEN' ].every( ( envvar ) => envvar in process.env  ) )
 	{
 		console.error( Console.red( 'ОШИБКА! Не указаны требуемые ENV переменные!' ) );
-		process.exit(1);
+		process.exit( 1 );
 	}
 
 	global.bot = new Bot({
@@ -29,10 +29,10 @@ const config = require('./config.json');
 		config
 	});
 
-	process.on('unhandledRejection', console.error);
-	process.on('uncaughtException', console.error);
-	process.on('uncaughtExceptionMonitor', () => {});
-	process.on('multipleResolves', (type, promise, reason) => 
+	process.on( 'unhandledRejection', console.error );
+	process.on( 'uncaughtException', console.error );
+	process.on( 'uncaughtExceptionMonitor', () => {});
+	process.on( 'multipleResolves', ( type, promise, reason ) => 
 	{
 		null;
 	});

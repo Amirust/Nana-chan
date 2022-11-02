@@ -1,6 +1,6 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, time } = require('discord.js');
-const Marriage = require('../structures/Marriage');
-const chunk = require('../utils/chunk');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, time } = require( 'discord.js' );
+const Marriage = require( '../structures/Marriage' );
+const chunk = require( '../utils/chunk' );
 
 module.exports =
 {
@@ -10,9 +10,9 @@ module.exports =
 	parentOf: 'marry',
 	async execute( interaction, locale )
 	{
-        const errors = locale.errors;
+		const errors = locale.errors;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
-		const dbMarriages = await bot.db.collection('marriages').find().toArray();
+		const dbMarriages = await bot.db.collection( 'marriages' ).find().toArray();
 		const marriages = dbMarriages.map( m => new Marriage( m ) );
 
 		const message = await interaction.deferReply();
@@ -26,7 +26,7 @@ module.exports =
 		});
 
 		let page = 0;
-		const pages = chunk( marriages, 2 );
+		const pages = chunk( marriages, 5 );
 
 		const listPrevFn = async ( i ) =>
 		{
@@ -36,7 +36,7 @@ module.exports =
 			if ( page > 0 )
 			{
 				page--;
-				await renderPage(i, true);
+				await renderPage( i, true );
 			}
 		};
 
@@ -48,45 +48,46 @@ module.exports =
 			if ( page < pages.length - 1 )
 			{
 				page++;
-				await renderPage(i, true);
+				await renderPage( i, true );
 			}
 		};
 
 		const renderPage = async ( i, isRerenderRequest = false ) =>
 		{
-            const buttonsRow = new ActionRowBuilder()
-                .addComponents(
-                        new ButtonBuilder()
-                            .setCustomId(`${interaction.id}.marry-list-prev`)
-                            .setEmoji('⬅️')
-                            .setStyle('Primary')
-                            .setDisabled(page === 0),
+			const buttonsRow = new ActionRowBuilder()
+				.addComponents(
+					new ButtonBuilder()
+						.setCustomId( `${interaction.id}.marry-list-prev` )
+						.setEmoji( '⬅️' )
+						.setStyle( 'Primary' )
+						.setDisabled( page === 0 ),
 
-                        new ButtonBuilder()
-                            .setCustomId(`${interaction.id}.marry-list-next`)
-                            .setEmoji('➡️')
-                            .setStyle('Primary')
-                            .setDisabled(page === pages.length - 1)
-                        );
+					new ButtonBuilder()
+						.setCustomId( `${interaction.id}.marry-list-next` )
+						.setEmoji( '➡️' )
+						.setStyle( 'Primary' )
+						.setDisabled( page === pages.length - 1 )
+				);
 
-			let description = locale.embed.description.format([ marriages.length ]);
+			let description = locale.embed.description.format( [ marriages.length ] );
 			for ( const marriage of pages[page] )
 			{
 				if ( !marriage ) { break; }
-				description += locale.embed.descriptionField.format([ marriage.id, `<@${marriage.initializer}>`, `<@${marriage.target}>`, time( new Date(marriage.date), 'R' ) ]);
+				description += locale.embed.descriptionField.format( [ marriage.id, `<@${marriage.initializer}>`, `<@${marriage.target}>`, time( new Date( marriage.date ), 'R' ) ] );
 			}
 
 			const embed = new EmbedBuilder()
-				.setTitle( locale.embed.title.format([ interaction.guild.name ]) )
+				.setTitle( locale.embed.title.format( [ interaction.guild.name ] ) )
 				.setDescription( description )
 				.setColor( bot.config.colors.embedBorder )
-				.setThumbnail( interaction.guild.iconURL({ size: 512, dynamic: true }) );
+				.setThumbnail( interaction.guild.iconURL({ size: 512, dynamic: true }) )
+				.setFooter({ text: locale.embed.footer.format( [ page + 1, pages.length ] ) });
 
-			if (pages.length > 1)
+			if ( pages.length > 1 )
 			{
-				if (isRerenderRequest)
+				if ( isRerenderRequest )
 				{
-					return await i.update({ embeds: [ embed ], components: [ buttonsRow ] });
+					return i.update({ embeds: [embed], components: [buttonsRow] });
 				}
 				return interaction.replied || interaction.deferred  ?
 					await interaction.editReply({ embeds: [embed], components: [buttonsRow] }) :
@@ -94,21 +95,21 @@ module.exports =
 			}
 			else
 			{
-				if (isRerenderRequest)
+				if ( isRerenderRequest )
 				{
-					return await i.update({ embeds: [ embed ] });
+					return i.update({ embeds: [embed] });
 				}
 				return interaction.replied || interaction.deferred ?
 					await interaction.editReply({ embeds: [embed] }) :
 					await interaction.reply({ embeds: [embed] });
 			}
 		};
-        
-		collector.on('collect', async (i) =>
+
+		collector.on( 'collect', async ( i ) =>
 		{
 			// Кнопачки пагинатора
-			if ( i.customId === `${interaction.id}.marry-list-prev` ) { await listPrevFn(i); }
-			if ( i.customId === `${interaction.id}.marry-list-next` ) { await listNextFn(i); }
+			if ( i.customId === `${interaction.id}.marry-list-prev` ) { await listPrevFn( i ); }
+			if ( i.customId === `${interaction.id}.marry-list-next` ) { await listNextFn( i ); }
 		});
 
 		await renderPage();

@@ -44,9 +44,9 @@ class RenderableMD
 	render ()
 	{
 		let md = this.md;
-		for (let rule of this.rules)
+		for ( let rule of this.rules )
 		{
-			md = md.replace(rule.regexp, rule.replace);
+			md = md.replace( rule.regexp, rule.replace );
 		}
         
 		return md;

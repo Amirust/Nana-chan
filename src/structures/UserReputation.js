@@ -1,6 +1,6 @@
 class UserReputation
 {
-	constructor(data)
+	constructor( data )
 	{
 		this.id = data.id;
 		this.reputation = data.reputation || 0;
@@ -8,18 +8,18 @@ class UserReputation
 
 	static async get( id )
 	{
-		const db = await bot.db.collection('reputation').findOne({ id });
-		if (!db) return new UserReputation({ id });
-		else return new UserReputation(db);
+		const db = await bot.db.collection( 'reputation' ).findOne({ id });
+		if ( !db ) return new UserReputation({ id });
+		else return new UserReputation( db );
 	}
 
-	static async getMany(ids)
+	static async getMany( ids )
 	{
-		const db = (await ( await bot.db.collection('reputation').find() ).toArray()).filter(rec => ids.includes(rec.id));
-		return ids.map( (id) =>
+		const db = ( await ( await bot.db.collection( 'reputation' ).find() ).toArray() ).filter( rec => ids.includes( rec.id ) );
+		return ids.map( ( id ) =>
 		{
-			const req = db.find(rec => rec.id === id);
-			return req ? new UserReputation(req) : new UserReputation({ id });
+			const req = db.find( rec => rec.id === id );
+			return req ? new UserReputation( req ) : new UserReputation({ id });
 		});
 	}
 
@@ -35,7 +35,7 @@ class UserReputation
 
 	async save()
 	{
-		return await bot.db.collection('reputation').updateOne({ id: this.id }, { $set: this.toJSON() }, { upsert: true });
+		return await bot.db.collection( 'reputation' ).updateOne({ id: this.id }, { $set: this.toJSON() }, { upsert: true });
 	}
 
 	toJSON()

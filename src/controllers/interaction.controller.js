@@ -28,7 +28,7 @@ class CommandsController
 		// if ( !bot.config.alphaTesters.includes( interaction.user.id ) ) { return interaction.reply({ content: 'Эта команда находится в альфа-тестировании и доступна только альфа-тестерам', ephemeral: true }); }
 
 		// Скам если бот в альфе
-		if ( bot.client.user.id === bot.config.alphaId && !bot.config.owners.includes( interaction.user.id ) ) { return interaction.reply({ content: `Видишь себя в этом списке?\n${ (await Promise.all( bot.config.owners.map(async id => await bot.client.users.fetch(id)) ).then(res => res.map(u => u.tag))).join(', ') }\nИ я нет, по этому катись нахуй.`, ephemeral: true }); }
+		if ( bot.client.user.id === bot.config.alphaId && !bot.config.owners.includes( interaction.user.id ) ) { return interaction.reply({ content: `Видишь себя в этом списке?\n${ ( await Promise.all( bot.config.owners.map( async id => await bot.client.users.fetch( id ) ) ).then( res => res.map( u => u.tag ) ) ).join( ', ' ) }\nИ я нет, по этому катись нахуй.`, ephemeral: true }); }
 
 		// Авто-комлпит
 		if ( interaction?.isAutocomplete() )
@@ -111,8 +111,8 @@ class CommandsController
 			.map( cmd => cmd.info ) // Пихаем только поле info
 			.filter( ( cmd ) => !cmd?.local || false ); // Если команда отмечена как локальная то не будет деплоится при синхронизации
 
-		if ( guild ) { return await bot.client.application.commands.set(commands, guild); }
-		return await bot.client.application.commands.set(commands);
+		if ( guild ) { return await bot.client.application.commands.set( commands, guild ); }
+		return await bot.client.application.commands.set( commands );
 	}
 
 	getCommand( name )

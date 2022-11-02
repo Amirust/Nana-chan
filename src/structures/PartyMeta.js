@@ -1,20 +1,20 @@
-const RenderableMD = require('./RenderableMD');
-const Flags = require('./Flags');
+const RenderableMD = require( './RenderableMD' );
+const Flags = require( './Flags' );
 
 class Privacy extends Flags 
 {
 	static FLAGS = {
-		Owner: (1 << 0),
-		Members: (2 << 0)
+		Owner: ( 1 << 0 ),
+		Members: ( 2 << 0 )
 	};
 }
 
 class PartyMeta 
 {
-	constructor(data)
+	constructor( data )
 	{
 		this._description = data?.description ? new RenderableMD({ md: data.description }) : null;
-		this.privacy = new Privacy(data?.privacy || 3);
+		this.privacy = new Privacy( data?.privacy || 3 );
 		this.icon = data?.icon || null;
 		this.course = data?.course || null;
 	}

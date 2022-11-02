@@ -1,4 +1,4 @@
-const Party = require('../structures/Party');
+const Party = require( '../structures/Party' );
 
 module.exports =
 {
@@ -25,8 +25,8 @@ module.exports =
 		const party = await Party.get( interaction.member.id );
 
 		await party.removeMember( interaction.member.id );
-		await interaction.member.roles.remove(party.roleId);
+		await interaction.member.roles.remove( party.roleId );
 
-		await interaction.reply({ content: locale.Success.format([ `<@${interaction.member.id}>`, party.name ]) });
+		await interaction.reply({ content: locale.Success.format( [ `<@${interaction.member.id}>`, party.name ] ) });
 	}
 };

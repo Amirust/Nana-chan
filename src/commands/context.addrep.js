@@ -1,5 +1,5 @@
-const { time } = require('discord.js');
-const UserReputation = require('../structures/UserReputation');
+const { time } = require( 'discord.js' );
+const UserReputation = require( '../structures/UserReputation' );
 
 module.exports =
 {
@@ -17,7 +17,7 @@ module.exports =
 			return interaction.reply({ content: locale.CantSetRepToSelf, ephemeral: true });
 		}
 
-		if ( !interaction.member.roles.cache.has('925061751563776016') )
+		if ( !interaction.member.roles.cache.has( '925061751563776016' ) )
 		{
 			return interaction.reply({ content: locale.NoPermissions, ephemeral: true });
 		}
@@ -25,10 +25,10 @@ module.exports =
 		if ( bot.cooldowns.reputation.has( interaction.user.id ) )
 		{
 			const cooldown = bot.cooldowns.reputation.get( interaction.user.id );
-			if ( !(cooldown.createdAt + 1000 * 60 * 60 * 4 < Date.now()) )
+			if ( !( cooldown.createdAt + 1000 * 60 * 60 * 4 < Date.now() ) )
 			{
 				return interaction.reply({
-					content: locale.Cooldown.format([ time( new Date(cooldown.createdAt + 1000 * 60 * 60 * 4), 'R' ) ]),
+					content: locale.Cooldown.format( [ time( new Date( cooldown.createdAt + 1000 * 60 * 60 * 4 ), 'R' ) ] ),
 					ephemeral: true
 				});
 			}
@@ -36,12 +36,12 @@ module.exports =
 		}
 
 		const user = await bot.client.users.fetch( interaction.targetId );
-		const reputation = await UserReputation.get(user.id);
+		const reputation = await UserReputation.get( user.id );
 
 		reputation.add();
 		await reputation.save();
 
-		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() } );
-		return interaction.reply({ content: locale.Success.format([ `<@${user.id}>`, reputation.reputation ]) });
+		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() });
+		return interaction.reply({ content: locale.Success.format( [ `<@${user.id}>`, reputation.reputation ] ) });
 	}
 };

@@ -1,5 +1,5 @@
-const { EmbedBuilder } = require('discord.js');
-const Party = require('../structures/Party');
+const { EmbedBuilder } = require( 'discord.js' );
+const Party = require( '../structures/Party' );
 
 module.exports =
 {
@@ -12,7 +12,7 @@ module.exports =
 		const errors = locale.errors;
 		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
 
-		const member = interaction.options.get('user')?.member;
+		const member = interaction.options.get( 'user' )?.member;
 		await interaction.guild.members.fetch( member?.id );
 
 		// Проверка на то есть ли пользователь на сервере
@@ -40,12 +40,12 @@ module.exports =
 
 		const embed = new EmbedBuilder()
 			.setTitle( locale.embed.title )
-			.setDescription( locale.embed.description.format([ `<@${member.id}>`, `<@${interaction.user.id}>`, party.name ]) )
+			.setDescription( locale.embed.description.format( [ `<@${member.id}>`, `<@${interaction.user.id}>`, party.name ] ) )
 			.setColor( bot.config.colors.embedBorder )
 			.setThumbnail( party.meta.icon );
 
 		await party.removeMember( member.id );
-		await member.roles.remove(party.roleId);
+		await member.roles.remove( party.roleId );
 
 		await interaction.reply({ embeds: [embed] });
 	}
