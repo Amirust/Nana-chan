@@ -17,7 +17,7 @@ const config = require( './config.json' );
 		});
 	};
 
-	if ( ![ 'MONGO', 'NANA_TOKEN' ].every( ( envvar ) => envvar in process.env  ) )
+	if ( ![ 'MONGO', 'NANA_TOKEN' ].every( ( envvar ) => envvar in process.env ) )
 	{
 		console.error( Console.red( 'ОШИБКА! Не указаны требуемые ENV переменные!' ) );
 		process.exit( 1 );
@@ -31,11 +31,6 @@ const config = require( './config.json' );
 
 	process.on( 'unhandledRejection', console.error );
 	process.on( 'uncaughtException', console.error );
-	process.on( 'uncaughtExceptionMonitor', () => {});
-	process.on( 'multipleResolves', ( type, promise, reason ) => 
-	{
-		null;
-	});
 
 	await bot.init();
 })();
