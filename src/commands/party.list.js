@@ -18,25 +18,25 @@ module.exports =
 
 		if ( parties.length <= 0 )
 		{
-			return interaction.reply({ content: locale.NoParties, ephemeral: true });
+			return interaction.reply( { content: locale.NoParties, ephemeral: true } );
 		}
 
 		const message = await interaction.deferReply();
 
-		const collector = await message.createMessageComponentCollector({
+		const collector = await message.createMessageComponentCollector( {
 			idle: 60000
-		});
+		} );
 		collector.on( 'end', ( collected, reason ) =>
 		{
 			if ( reason !== 'success' ) { interaction.deleteReply(); }
-		});
+		} );
 
 		let page = 0;
 		const pages = chunk( parties, 5 );
 
 		const listPrevFn = async ( i ) =>
 		{
-			if ( i.user.id !== interaction.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 			if ( page > 0 )
@@ -48,7 +48,7 @@ module.exports =
 
 		const listNextFn = async ( i ) =>
 		{
-			if ( i.user.id !== interaction.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 			if ( page < pages.length - 1 )
@@ -60,7 +60,7 @@ module.exports =
 
 		const buttonBackToListFn = async ( i ) =>
 		{
-			if ( i.user.id !== interaction.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 			await renderPage( i, true );
@@ -75,7 +75,7 @@ module.exports =
 			const reputations = await UserReputation.getMany( members );
 			const reputationSum = reputations.reduce( ( acc, cur ) => acc + Number( cur.reputation ), 0 );
 
-			if ( !party ) { return i.reply({ content: errors.NotFound, ephemeral: true }); }
+			if ( !party ) { return i.reply( { content: errors.NotFound, ephemeral: true } ); }
 
 			let infoDescription = locale.info.description.format( [ time( new Date( party.date ), 'R' ), party.meta.course, reputationSum] );
 			if ( party.meta.privacy.has( 'Owner' ) )
@@ -94,7 +94,7 @@ module.exports =
 				.setDescription( infoDescription )
 				.setThumbnail( party.meta.icon )
 				.setColor( bot.config.colors.embedBorder )
-				.setFooter({ text: `ID: ${party.id}` });
+				.setFooter( { text: `ID: ${party.id}` } );
 
 			const row = new ActionRowBuilder()
 				.addComponents(
@@ -104,7 +104,7 @@ module.exports =
 						.setStyle( 'Primary' )
 				);
 
-			return i.update({ embeds: [embed], components: [row] });
+			return i.update( { embeds: [embed], components: [row] } );
 		};
 
 		const renderPage = async ( i, isRerenderRequest = false ) =>
@@ -130,8 +130,8 @@ module.exports =
 				.setTitle( locale.embed.title.format( [ interaction.guild.name ] ) )
 				.setDescription( description )
 				.setColor( bot.config.colors.embedBorder )
-				.setThumbnail( interaction.guild.iconURL({ size: 512, dynamic: true }) )
-				.setFooter({ text: locale.embed.footer.format( [ page + 1, pages.length ] ) });
+				.setThumbnail( interaction.guild.iconURL( { size: 512, dynamic: true } ) )
+				.setFooter( { text: locale.embed.footer.format( [ page + 1, pages.length ] ) } );
 
 			const row = new ActionRowBuilder()
 				.addComponents(
@@ -147,7 +147,7 @@ module.exports =
 									description: `${p.meta.privacy.has( 'Owner' ) ? locale.selectMenu.owner.format( [ `${ ( bot.client.users.cache.get( p.owner ) ).tag }` ] ) : ''}${p.meta.privacy.has( 'Owner' ) ? ' | ' : ''}${p.meta.privacy.has( 'Members' ) ? locale.selectMenu.members.format( [ p.members.length + 1 ] ) : ''}`,
 									emoji: '🔱'
 								};
-							})
+							} )
 						)
 				);
 
@@ -170,21 +170,21 @@ module.exports =
 			{
 				if ( isRerenderRequest )
 				{
-					return i.update({ embeds: [ embed ], components: [ row, buttonsRow ] });
+					return i.update( { embeds: [ embed ], components: [ row, buttonsRow ] } );
 				}
 				return interaction.replied || interaction.deferred  ?
-					await interaction.editReply({ embeds: [embed], components: [row, buttonsRow] }) :
-					await interaction.reply({ embeds: [embed], components: [row, buttonsRow] });
+					await interaction.editReply( { embeds: [embed], components: [row, buttonsRow] } ) :
+					await interaction.reply( { embeds: [embed], components: [row, buttonsRow] } );
 			}
 			else
 			{
 				if ( isRerenderRequest )
 				{
-					return i.update({ embeds: [ embed ], components: [row] });
+					return i.update( { embeds: [ embed ], components: [row] } );
 				}
 				return interaction.replied || interaction.deferred ?
-					await interaction.editReply({ embeds: [embed], components: [row] }) :
-					await interaction.reply({ embeds: [embed], components: [row] });
+					await interaction.editReply( { embeds: [embed], components: [row] } ) :
+					await interaction.reply( { embeds: [embed], components: [row] } );
 			}
 		};
 
@@ -199,7 +199,7 @@ module.exports =
 
 			// Возврат из инфо
 			if ( i.customId === `${interaction.id}.back.to.list` ) { await buttonBackToListFn( i ); }
-		});
+		} );
 
 		return renderPage( interaction );
 	}

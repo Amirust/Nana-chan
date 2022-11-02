@@ -16,48 +16,48 @@ class Party
 
 	static async isPartyMember( id )
 	{
-		return !!( await bot.db.collection( 'parties' ).findOne({ $or: [ { owner: id }, { members: { $regex: id } } ] }) );
+		return !!( await bot.db.collection( 'parties' ).findOne( { $or: [ { owner: id }, { members: { $regex: id } } ] } ) );
 	}
 
 	static async isNameOccupied( name )
 	{
-		return !!( await bot.db.collection( 'parties' ).findOne({ name }) );
+		return !!( await bot.db.collection( 'parties' ).findOne( { name } ) );
 	}
 
 	static async isOwner( id )
 	{
-		return !!( await bot.db.collection( 'parties' ).findOne({ owner: id }) );
+		return !!( await bot.db.collection( 'parties' ).findOne( { owner: id } ) );
 	}
 
 	static async create( owner, name )
 	{
 		const id = ( Date.now() % 1000000 ).toString( 16 );
-		const role = await bot.client.guilds.cache.get( '925061751211450380' ).roles.create({
+		const role = await bot.client.guilds.cache.get( '925061751211450380' ).roles.create( {
 			name: name
-		});
-		return new Party({ id, owner, name, date: Date.now(), roleId: role.id });
+		} );
+		return new Party( { id, owner, name, date: Date.now(), roleId: role.id } );
 	}
 
 	static async get( id )
 	{
 		if ( /^[0-9]{17,19}$/gm.test( id ) )
 		{
-			const party = await bot.db.collection( 'parties' ).findOne({ $or: [ { owner: id }, { members: { $regex: id } } ] });
+			const party = await bot.db.collection( 'parties' ).findOne( { $or: [ { owner: id }, { members: { $regex: id } } ] } );
 			return party ? new Party( party ) : null;
 		}
-		const party = await bot.db.collection( 'parties' ).findOne({ id });
+		const party = await bot.db.collection( 'parties' ).findOne( { id } );
 		return party ? new Party( party ) : null;
 	}
 
 	async save()
 	{
-		return await bot.db.collection( 'parties' ).updateOne({ id: this.id }, { $set: this.toJSON() }, { upsert: true });
+		return await bot.db.collection( 'parties' ).updateOne( { id: this.id }, { $set: this.toJSON() }, { upsert: true } );
 	}
 
 	async delete()
 	{
 		await bot.client.guilds.cache.get( '925061751211450380' ).roles.delete( this.roleId );
-		return await bot.db.collection( 'parties' ).deleteOne({ id: this.id });
+		return await bot.db.collection( 'parties' ).deleteOne( { id: this.id } );
 	}
 
 	async addMember( id )

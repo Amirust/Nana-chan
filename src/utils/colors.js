@@ -41,6 +41,4 @@ class Console
 	}
 }
 
-module.exports = {
-	Console
-};
+export { Console };

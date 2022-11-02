@@ -17,20 +17,20 @@ module.exports =
 
 		const message = await interaction.deferReply();
 
-		const collector = await message.createMessageComponentCollector({
+		const collector = await message.createMessageComponentCollector( {
 			idle: 60000
-		});
+		} );
 		collector.on( 'end', ( collected, reason ) =>
 		{
 			if ( reason !== 'success' ) { interaction.deleteReply(); }
-		});
+		} );
 
 		let page = 0;
 		const pages = chunk( marriages, 5 );
 
 		const listPrevFn = async ( i ) =>
 		{
-			if ( i.user.id !== interaction.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 			if ( page > 0 )
@@ -42,7 +42,7 @@ module.exports =
 
 		const listNextFn = async ( i ) =>
 		{
-			if ( i.user.id !== interaction.user?.id ) { return i.reply({ content: errors.InteractionNotForYou, ephemeral: true }); }
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 			if ( page < pages.length - 1 )
@@ -80,28 +80,28 @@ module.exports =
 				.setTitle( locale.embed.title.format( [ interaction.guild.name ] ) )
 				.setDescription( description )
 				.setColor( bot.config.colors.embedBorder )
-				.setThumbnail( interaction.guild.iconURL({ size: 512, dynamic: true }) )
-				.setFooter({ text: locale.embed.footer.format( [ page + 1, pages.length ] ) });
+				.setThumbnail( interaction.guild.iconURL( { size: 512, dynamic: true } ) )
+				.setFooter( { text: locale.embed.footer.format( [ page + 1, pages.length ] ) } );
 
 			if ( pages.length > 1 )
 			{
 				if ( isRerenderRequest )
 				{
-					return i.update({ embeds: [embed], components: [buttonsRow] });
+					return i.update( { embeds: [embed], components: [buttonsRow] } );
 				}
 				return interaction.replied || interaction.deferred  ?
-					await interaction.editReply({ embeds: [embed], components: [buttonsRow] }) :
-					await interaction.reply({ embeds: [embed], components: [buttonsRow] });
+					await interaction.editReply( { embeds: [embed], components: [buttonsRow] } ) :
+					await interaction.reply( { embeds: [embed], components: [buttonsRow] } );
 			}
 			else
 			{
 				if ( isRerenderRequest )
 				{
-					return i.update({ embeds: [embed] });
+					return i.update( { embeds: [embed] } );
 				}
 				return interaction.replied || interaction.deferred ?
-					await interaction.editReply({ embeds: [embed] }) :
-					await interaction.reply({ embeds: [embed] });
+					await interaction.editReply( { embeds: [embed] } ) :
+					await interaction.reply( { embeds: [embed] } );
 			}
 		};
 
@@ -110,7 +110,7 @@ module.exports =
 			// Кнопачки пагинатора
 			if ( i.customId === `${interaction.id}.marry-list-prev` ) { await listPrevFn( i ); }
 			if ( i.customId === `${interaction.id}.marry-list-next` ) { await listNextFn( i ); }
-		});
+		} );
 
 		await renderPage();
 	}

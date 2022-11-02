@@ -7,7 +7,7 @@ ModalBuilder.prototype.setAction = function ( cb )
 	{
 		if ( !interaction.isModalSubmit() ) return;
 		if ( interaction.customId === this.data.custom_id ) { await cb( interaction ); }
-	});
+	} );
 
 	return this;
 };

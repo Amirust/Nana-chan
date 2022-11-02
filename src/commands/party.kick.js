@@ -18,16 +18,16 @@ module.exports =
 		// Проверка на то есть ли пользователь на сервере
 		if ( !member )
 		{
-			return interaction.reply({ content: errors.UserNotFound, ephemeral: true });
+			return interaction.reply( { content: errors.UserNotFound, ephemeral: true } );
 		}
 		if ( member.id === interaction.user.id )
 		{
-			return interaction.reply({ content: locale.DontKickSelf, ephemeral: true });
+			return interaction.reply( { content: locale.DontKickSelf, ephemeral: true } );
 		}
 		// Проверка на то есть ли партия у пользователя
 		if ( !( await Party.isOwner( interaction.user.id ) ) )
 		{
-			return interaction.reply({ content: locale.NoParty, ephemeral: true });
+			return interaction.reply( { content: locale.NoParty, ephemeral: true } );
 		}
 
 		const party = await Party.get( interaction.member.id );
@@ -35,7 +35,7 @@ module.exports =
 		// Проверка на то являеться ли переданный юзер участником партии
 		if ( !party.members.includes( member.id ) )
 		{
-			return interaction.reply({ content: locale.UserNoInParty, ephemeral: true });
+			return interaction.reply( { content: locale.UserNoInParty, ephemeral: true } );
 		}
 
 		const embed = new EmbedBuilder()
@@ -47,6 +47,6 @@ module.exports =
 		await party.removeMember( member.id );
 		await member.roles.remove( party.roleId );
 
-		await interaction.reply({ embeds: [embed] });
+		await interaction.reply( { embeds: [embed] } );
 	}
 };

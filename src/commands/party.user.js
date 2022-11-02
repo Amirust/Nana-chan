@@ -18,7 +18,7 @@ module.exports =
 		// Проверка на то есть ли партия у переданного юзера
 		if ( !( await Party.isPartyMember( member.id ) ) )
 		{
-			return interaction.reply({ content: member.id === interaction.user.id ? locale.YouHasNoParty : locale.UserHasNoParty, ephemeral: true });
+			return interaction.reply( { content: member.id === interaction.user.id ? locale.YouHasNoParty : locale.UserHasNoParty, ephemeral: true } );
 		}
 
 		const party = await Party.get( member.id );
@@ -45,8 +45,8 @@ module.exports =
 			.setDescription( infoDescription )
 			.setThumbnail( party.meta.icon )
 			.setColor( bot.config.colors.embedBorder )
-			.setFooter({ text: `ID: ${party.id}` });
+			.setFooter( { text: `ID: ${party.id}` } );
 
-		return await interaction.reply({ embeds: [embed] });
+		return await interaction.reply( { embeds: [embed] } );
 	}
 };

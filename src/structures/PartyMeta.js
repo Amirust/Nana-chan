@@ -13,7 +13,7 @@ class PartyMeta
 {
 	constructor( data )
 	{
-		this._description = data?.description ? new RenderableMD({ md: data.description }) : null;
+		this._description = data?.description ? new RenderableMD( { md: data.description } ) : null;
 		this.privacy = new Privacy( data?.privacy || 3 );
 		this.icon = data?.icon || null;
 		this.course = data?.course || null;
@@ -26,7 +26,7 @@ class PartyMeta
 
 	set description( value )
 	{
-		this._description = new RenderableMD({ md: value });
+		this._description = new RenderableMD( { md: value } );
 	}
 
 	toJSON()

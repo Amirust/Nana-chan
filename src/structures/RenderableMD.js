@@ -35,7 +35,7 @@ const defaultRules = [
 
 class RenderableMD 
 {
-	constructor ({ md, rules })
+	constructor ( { md, rules } )
 	{
 		this.md = md;
 		this.rules = rules || defaultRules; // Array<{ regexp, replace }>

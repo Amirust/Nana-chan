@@ -40,10 +40,10 @@ module.exports =
 		description += locale.embed.reputationDescription.format( [ reputation.reputation ] );
 
 		const embed = new EmbedBuilder()
-			.setAuthor({ name: member.user.tag, iconURL: member.user.avatarURL({ size: 256, dynamic: true }) })
+			.setAuthor( { name: member.user.tag, iconURL: member.user.avatarURL( { size: 256, dynamic: true } ) } )
 			.setDescription( description )
 			.setColor( bot.config.colors.embedBorder );
 
-		return interaction.reply({ embeds: [embed] });
+		return interaction.reply( { embeds: [embed] } );
 	}
 };

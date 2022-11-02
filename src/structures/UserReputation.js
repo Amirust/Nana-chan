@@ -8,8 +8,8 @@ class UserReputation
 
 	static async get( id )
 	{
-		const db = await bot.db.collection( 'reputation' ).findOne({ id });
-		if ( !db ) return new UserReputation({ id });
+		const db = await bot.db.collection( 'reputation' ).findOne( { id } );
+		if ( !db ) return new UserReputation( { id } );
 		else return new UserReputation( db );
 	}
 
@@ -19,8 +19,8 @@ class UserReputation
 		return ids.map( ( id ) =>
 		{
 			const req = db.find( rec => rec.id === id );
-			return req ? new UserReputation( req ) : new UserReputation({ id });
-		});
+			return req ? new UserReputation( req ) : new UserReputation( { id } );
+		} );
 	}
 
 	add( count = 1 )
@@ -35,7 +35,7 @@ class UserReputation
 
 	async save()
 	{
-		return await bot.db.collection( 'reputation' ).updateOne({ id: this.id }, { $set: this.toJSON() }, { upsert: true });
+		return await bot.db.collection( 'reputation' ).updateOne( { id: this.id }, { $set: this.toJSON() }, { upsert: true } );
 	}
 
 	toJSON()

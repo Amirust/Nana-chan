@@ -23,12 +23,12 @@ module.exports = async ( old, message ) =>
 		{
 			return;
 		}
-		const text = inspect( evaled, { depth: 0, maxArrayLength: 50 });
+		const text = inspect( evaled, { depth: 0, maxArrayLength: 50 } );
 		if ( text.length > 1990 )
 		{
 			return 'Ответ занимает больше чем позволенно дискордом';
 		}
-		await message.channel.send( '```js\n' + text + '```' ).catch( () => {});
+		await message.channel.send( '```js\n' + text + '```' ).catch( () => {} );
 	}
 	catch ( error )
 	{
@@ -36,6 +36,6 @@ module.exports = async ( old, message ) =>
 		{
 			message.react( '❌' );
 		}
-		await message.channel.send( '```js\n' + error + '```' ).catch( () => {});
+		await message.channel.send( '```js\n' + error + '```' ).catch( () => {} );
 	}
 };
