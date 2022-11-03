@@ -1,4 +1,4 @@
-import { Client, Collection, IntentsBitField, Partials } from 'discord.js';
+import {Client, Collection, CommandInteraction, IntentsBitField, Partials} from 'discord.js';
 import { Db, MongoClient } from 'mongodb';
 import fs from 'fs';
 // @ts-ignore
@@ -73,9 +73,9 @@ class Bot
 		this.InteractionController = new InteractionController( this.commands );
 		this.IC = this.InteractionController; // Алиас
 
-		this.client.on( 'interactionCreate', async ( interaction ) =>
+		this.client.on( 'interactionCreate', async ( interaction: any ) =>
 		{
-			await this.InteractionController.process( interaction );
+			await this.InteractionController.process( interaction, interaction.locale );
 		} );
 	}
 
@@ -108,4 +108,4 @@ class Bot
 	}
 }
 
-module.exports = Bot;
+export default Bot;

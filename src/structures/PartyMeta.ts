@@ -1,5 +1,5 @@
-const RenderableMD = require( './RenderableMD' );
-const Flags = require( './Flags' );
+import RenderableMD from './RenderableMD';
+import Flags from './Flags';
 
 class Privacy extends Flags 
 {
@@ -11,7 +11,12 @@ class Privacy extends Flags
 
 class PartyMeta 
 {
-	constructor( data )
+	public _description: RenderableMD | null;
+	public privacy: Privacy;
+	public icon: string | null;
+	public course: string | null;
+
+	constructor( data: { description: string | null, privacy: number | null, icon: string | null, course: string | null } )
 	{
 		this._description = data?.description ? new RenderableMD( { md: data.description } ) : null;
 		this.privacy = new Privacy( data?.privacy || 3 );
@@ -21,11 +26,13 @@ class PartyMeta
 
 	get description()
 	{
+		// @ts-ignore
 		return this._description;
 	}
 
-	set description( value )
+	set description( value: string )
 	{
+		// @ts-ignore
 		this._description = new RenderableMD( { md: value } );
 	}
 
@@ -40,4 +47,4 @@ class PartyMeta
 	}
 }
 
-module.exports = PartyMeta;
+export default PartyMeta;

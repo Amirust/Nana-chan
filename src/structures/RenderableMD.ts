@@ -33,12 +33,20 @@ const defaultRules = [
 	}
 ];
 
+type Rule = {
+	regexp: RegExp;
+	replace: string;
+}
+
 class RenderableMD 
 {
-	constructor ( { md, rules } )
+	public md: string;
+	public rules: Array<Rule>;
+
+	constructor ( { md, rules }: { md: string, rules?: Array<Rule> } )
 	{
 		this.md = md;
-		this.rules = rules || defaultRules; // Array<{ regexp, replace }>
+		this.rules = rules || defaultRules;
 	}
     
 	render ()
@@ -58,4 +66,4 @@ class RenderableMD
 	}
 }
 
-module.exports = RenderableMD;  
+export default RenderableMD;

@@ -1,14 +1,29 @@
-import { CommandInteraction, CommandInteractionOption } from 'discord.js';
+import {
+	CommandInteraction,
+	CommandInteractionOption,
+	SlashCommandAttachmentOption,
+	SlashCommandBooleanOption,
+	SlashCommandChannelOption,
+	SlashCommandIntegerOption,
+	SlashCommandMentionableOption,
+	SlashCommandNumberOption,
+	SlashCommandRoleOption, SlashCommandStringOption, SlashCommandUserOption
+} from 'discord.js';
 import { Localization } from './Localization';
 
-type CommandInfo = {
+export type CommandInfo = {
 	name: string,
 	description?: string,
-	options?: Array<CommandInteractionOption>
+	options?: Array<any>,
+	type?: number,
+	local?: boolean,
 }
 
 export interface Command {
 	info: CommandInfo,
-	execute( interaction: CommandInteraction, locale?: Localization ): Promise<void>,
-	executeAC( interaction: CommandInteraction, locale?: Localization ): Promise<void>;
+	parentOf?: string,
+	type?: number,
+	permissions?: Array<string>,
+	execute( interaction: CommandInteraction, locale: Localization ): Promise<any>,
+	executeAC?( interaction: CommandInteraction, locale: Localization ): Promise<any>;
 }

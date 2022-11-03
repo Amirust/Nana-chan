@@ -1,7 +1,10 @@
 // ФАЙЛ ДЕКЛАРАЦИИ ПОД-КОМАНД
 // СВАДЬБЫ
 
-module.exports = {
+import { CommandsDeclaration } from '../types/CommandsDeclaration';
+
+export const command: CommandsDeclaration =
+{
 	info: {
 		name: 'marry',
 		description: 'Свадьбы',

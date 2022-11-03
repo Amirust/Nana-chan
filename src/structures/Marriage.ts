@@ -1,8 +1,21 @@
-const crypto = require( 'crypto' );
+import { Snowflake } from 'discord.js';
+import crypto from 'crypto';
+
+type MarriageT = {
+	id: string,
+	initializer: Snowflake,
+	target: Snowflake,
+	date: Date
+}
 
 class Marriage 
 {
-	constructor( data )
+	public id: string;
+	public initializer: Snowflake;
+	public target: Snowflake;
+	public date: Date;
+
+	constructor( data: { id: string, initializer: Snowflake, target: Snowflake, date: Date } )
 	{
 		this.id = data.id;
 		this.initializer = data.initializer;
@@ -10,25 +23,27 @@ class Marriage
 		this.date = new Date( data.date );
 	}
 
-	static async isMarried( id )
+	static async isMarried( id: Snowflake )
 	{
 		return !!( await bot.db.collection( 'marriages' ).findOne( { $or: [ { initializer: id }, { target: id } ] } ) );
 	}
 
-	static create( { initializer, target } )
+	static create( { initializer, target }: { initializer: Snowflake, target: Snowflake } )
 	{
 		let id = BigInt( `0x${crypto.createHmac( 'sha256', 'marry' ).update( ( BigInt( initializer ) + BigInt( target ) ).toString() ).digest( 'hex' )}` ) % ( 1024n * 16n );
-		return new Marriage( { id: id.toString().padStart( 5, '0' ), initializer, target, date: Date.now() } );
+		return new Marriage( { id: id.toString().padStart( 5, '0' ), initializer, target, date: new Date() } );
 	}
 
-	static async get( id )
+	static async get( id: Snowflake | string )
 	{
 		if ( /^[0-9]{17,19}$/gm.test( id ) )
 		{
-			const marriage = await bot.db.collection( 'marriages' ).findOne( { $or: [ { initializer: id }, { target: id } ] } );
+			// @ts-ignore
+			const marriage: MarriageT | null = await bot.db.collection( 'marriages' ).findOne( { $or: [ { initializer: id }, { target: id } ] } );
 			return marriage ? new Marriage( marriage ) : null;
 		}
-		const marriage = await bot.db.collection( 'marriages' ).findOne( { id } );
+		// @ts-ignore
+		const marriage: MarriageT | null = await bot.db.collection( 'marriages' ).findOne( { id } );
 		return marriage ? new Marriage( marriage ) : null;
 	}
 
@@ -53,4 +68,4 @@ class Marriage
 	}
 }
 
-module.exports = Marriage;
+export default Marriage;

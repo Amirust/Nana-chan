@@ -1,22 +1,22 @@
-import { Collection, EmbedFooterData, Snowflake } from 'discord.js';
+import {Collection, ColorResolvable, EmbedFooterData, Snowflake} from 'discord.js';
 
 type BotConfig = {
 	owners: Array<Snowflake>,
 	alphaTesters: Array<Snowflake>,
 	footer: EmbedFooterData,
 	colors: {
-		primary: string,
-		warn: string,
-		danger: string,
-		success: string,
-		embedBorder: string
+		primary: ColorResolvable,
+		warn: ColorResolvable,
+		danger: ColorResolvable,
+		success: ColorResolvable,
+		embedBorder: ColorResolvable
 	},
 	alphaId: Snowflake,
 	version: string
 }
 
 type RequestsCooldown = {
-	createdAt: Date,
+	createdAt: EpochTimeStamp,
 	target?: Snowflake,
 	requester?: string
 }

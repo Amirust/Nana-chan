@@ -1,7 +1,9 @@
 type Localization = {
 	description: string,
-	errors: Array<string>,
-	commands: any
+	errors: { [name: string]: string },
+	commands: {
+		[commandName: string]: any
+	}
 }
 
 export { Localization };

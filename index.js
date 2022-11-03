@@ -1,5 +1,5 @@
-const Bot = require( './src/client/Client' );
-const { Console } = require( './src/utils/colors' );
+const Bot = require( './dist/client/Client' ).default;
+const { Console } = require( './dist/utils/colors' );
 const config = require( './config.json' );
 
 ( async () =>

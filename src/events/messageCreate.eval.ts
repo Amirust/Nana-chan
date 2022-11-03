@@ -1,10 +1,12 @@
-const { inspect } = require( 'util' );
+import { Message } from 'discord.js';
+import { inspect } from 'util';
 
-module.exports = async ( old, message ) =>
+module.exports = async ( message: Message ) =>
 {
 	if ( !bot.config.owners.includes( message.author.id ) ) { return; }
 
 	let trigger = '?eval';
+	// @ts-ignore
 	if ( bot.client.user.id === bot.config.alphaId ) { trigger = ':eval'; }
 
 	if ( !message.content.startsWith( trigger ) ) { return; }
@@ -14,6 +16,7 @@ module.exports = async ( old, message ) =>
 	{
 		const evaled = await eval( arg );
 
+		// @ts-ignore
 		if ( [ 'READ_MESSAGE_HISTORY', 'ADD_REACTIONS' ].every( async ( perm ) => message.channel.permissionsFor( await message.guild.members.fetch( bot.client.id ) )?.has( perm ) ) )
 		{
 			message.react( '✅' );
@@ -32,6 +35,7 @@ module.exports = async ( old, message ) =>
 	}
 	catch ( error )
 	{
+		// @ts-ignore
 		if ( [ 'READ_MESSAGE_HISTORY', 'ADD_REACTIONS' ].every( async ( perm ) => message.channel.permissionsFor( await message.guild.members.fetch( bot.client.id ) )?.has( perm ) ) )
 		{
 			message.react( '❌' );

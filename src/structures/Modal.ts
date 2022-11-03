@@ -1,7 +1,7 @@
 
-const { ModalBuilder } = require( 'discord.js' );
+import { ModalBuilder } from 'discord.js';
 
-ModalBuilder.prototype.setAction = function ( cb )
+ModalBuilder.prototype.setAction = function ( cb: Function )
 {
 	bot.client.on( 'interactionCreate', async interaction => 
 	{
