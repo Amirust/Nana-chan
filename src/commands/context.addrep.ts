@@ -1,7 +1,7 @@
 import { ContextCommand } from '../types/ContextCommand';
 
-const { time } = require( 'discord.js' );
-const UserReputation = require( '../structures/UserReputation' );
+import { time } from 'discord.js';
+import UserReputation from '../structures/UserReputation';
 
 export const command: ContextCommand =
 {
