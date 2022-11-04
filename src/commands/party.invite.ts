@@ -49,7 +49,7 @@ export const command: Command =
 		// @ts-ignore
 		const party = await Party.get( interaction.member.id );
 		// @ts-ignore
-		if ( party.status === 0 )
+		if ( party?.status === 0 )
 		{
 			return interaction.reply( { content: locale.NoParty, ephemeral: true } );
 		}

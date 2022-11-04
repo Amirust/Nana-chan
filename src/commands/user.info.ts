@@ -28,7 +28,7 @@ export const command: Command =
 		// @ts-ignore
 		let party = await Party.get( member.id );
 		// @ts-ignore
-		if ( party.status === 0 )
+		if ( party?.status === 0 )
 		{
 			party = null;
 		}
