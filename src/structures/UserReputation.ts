@@ -59,4 +59,4 @@ class UserReputation
 	}
 }
 
-module.exports = UserReputation;
+export default UserReputation;

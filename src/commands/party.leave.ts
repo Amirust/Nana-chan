@@ -1,14 +1,16 @@
-const Party = require( '../structures/Party' );
+import { Command } from '../types/Command';
 
-module.exports =
+import Party from '../structures/Party';
+
+export const command: Command =
 {
 	info: {
 		name: 'leave',
 	},
 	parentOf: 'party',
-	async execute( interaction, locale )
+	async execute( interaction, rawlocale )
 	{
-		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
+		const locale = rawlocale.commands[ `${this.parentOf}.${this.info.name}` ];
 
 		// Проверка на то есть ли партия у пользователя
 		if ( !( await Party.isPartyMember( interaction.user.id ) ) )
@@ -22,11 +24,15 @@ module.exports =
 			return interaction.reply( { content: locale.YouOwner, ephemeral: true } );
 		}
 
+		// @ts-ignore
 		const party = await Party.get( interaction.member.id );
 
+		// @ts-ignore
 		await party.removeMember( interaction.member.id );
+		// @ts-ignore
 		await interaction.member.roles.remove( party.roleId );
 
+		// @ts-ignore
 		await interaction.reply( { content: locale.Success.format( [ `<@${interaction.member.id}>`, party.name ] ) } );
 	}
 };

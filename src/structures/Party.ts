@@ -126,4 +126,4 @@ class Party
 	}
 }
 
-module.exports = Party;
+export default Party;

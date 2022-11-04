@@ -54,7 +54,7 @@ class Bot
 			_mongo: { value: mongo }
 		} );
 
-		fs.readdirSync( './src/events' ).filter( ( file ) => file.endsWith( '.js' ) ).forEach( ( file ) =>
+		fs.readdirSync( './dist/events' ).filter( ( file ) => file.endsWith( '.js' ) ).forEach( ( file ) =>
 		{
 			const event = require( `../events/${file}` );
 			const name = file.split( '.' )[ 0 ];
@@ -64,9 +64,10 @@ class Bot
 		} );
 
 		this.commands = new Collection();
-		fs.readdirSync( './src/commands' ).filter( ( f ) => f.endsWith( '.js' ) ).forEach( ( file ) =>
+		fs.readdirSync( './dist/commands' ).filter( ( f ) => f.endsWith( '.js' ) ).forEach( ( file ) =>
 		{
-			const interaction = require( `../commands/${file}` );
+			const interaction = require( `../commands/${file}` ).command;
+			if ( !interaction ) return;
 			this.commands.set( interaction.parentOf ? `${interaction.parentOf}.${interaction.info.name}` : interaction.info.name, interaction );
 		} );
 

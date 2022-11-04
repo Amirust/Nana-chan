@@ -1,19 +1,30 @@
-const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, time } = require( 'discord.js' );
-const Party = require( '../structures/Party' );
-const UserReputation = require( '../structures/UserReputation' );
-const chunk = require( '../utils/chunk' );
+import { Command } from '../types/Command';
 
-module.exports =
+import {
+	EmbedBuilder,
+	ActionRowBuilder,
+	SelectMenuBuilder,
+	ButtonBuilder,
+	time,
+	ButtonInteraction,
+	SelectMenuInteraction, ButtonStyle, CommandInteraction
+} from 'discord.js';
+import Party from '../structures/Party';
+import UserReputation from'../structures/UserReputation';
+import chunk from '../utils/chunk';
+
+export const command: Command =
 {
 	info: {
 		name: 'list'
 	},
 	parentOf: 'party',
-	async execute( interaction, locale )
+	async execute( interaction, rawlocale )
 	{
-		const errors = locale.errors;
-		locale = locale.commands[ `${this.parentOf}.${this.info.name}` ];
+		const errors = rawlocale.errors;
+		const locale = rawlocale.commands[ `${this.parentOf}.${this.info.name}` ];
 		const dbParties = await bot.db.collection( 'parties' ).find().toArray();
+		// @ts-ignore
 		const parties = dbParties.filter( p => p.status !== 0 ).map( m => new Party( m ) );
 
 		if ( parties.length <= 0 )
@@ -34,7 +45,7 @@ module.exports =
 		let page = 0;
 		const pages = chunk( parties, 5 );
 
-		const listPrevFn = async ( i ) =>
+		const listPrevFn = async ( i: ButtonInteraction ) =>
 		{
 			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
@@ -46,7 +57,7 @@ module.exports =
 			}
 		};
 
-		const listNextFn = async ( i ) =>
+		const listNextFn = async ( i: ButtonInteraction ) =>
 		{
 			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
@@ -58,7 +69,7 @@ module.exports =
 			}
 		};
 
-		const buttonBackToListFn = async ( i ) =>
+		const buttonBackToListFn = async ( i: ButtonInteraction ) =>
 		{
 			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
@@ -66,10 +77,11 @@ module.exports =
 			await renderPage( i, true );
 		};
 
-		const renderPartyInfo = async ( i ) =>
+		const renderPartyInfo = async ( i: SelectMenuInteraction ) =>
 		{
 			const id = i.values[0];
 			const party = parties.find( p => p.id === id );
+			// @ts-ignore
 			const members = party.members.concat( [ party.owner ] );
 
 			const reputations = await UserReputation.getMany( members );
@@ -78,15 +90,19 @@ module.exports =
 			if ( !party ) { return i.reply( { content: errors.NotFound, ephemeral: true } ); }
 
 			let infoDescription = locale.info.description.format( [ time( new Date( party.date ), 'R' ), party.meta.course, reputationSum] );
+			// @ts-ignore
 			if ( party.meta.privacy.has( 'Owner' ) )
 			{
 				infoDescription += locale.info.owner.format( [ `<@${party.owner}>` ] );
 			}
+			// @ts-ignore
 			if ( party.meta.privacy.has( 'Members' ) )
 			{
+				// @ts-ignore
 				infoDescription += locale.info.members.format( [ members.length, members.map( m => `[${reputations.find( rec => rec.id === m ).reputation}] <@${m}>` ).join( ', ' ) ] ) + '\n';
 			}
 
+			// @ts-ignore
 			infoDescription += `\n${ party.meta.description.render() }`;
 
 			const embed = new EmbedBuilder()
@@ -101,13 +117,14 @@ module.exports =
 					new ButtonBuilder()
 						.setCustomId( `${interaction.id}.back.to.list` )
 						.setLabel( locale.info.back )
-						.setStyle( 'Primary' )
+						.setStyle( ButtonStyle.Primary )
 				);
 
+			// @ts-ignore
 			return i.update( { embeds: [embed], components: [row] } );
 		};
 
-		const renderPage = async ( i, isRerenderRequest = false ) =>
+		const renderPage = async ( i: ButtonInteraction | CommandInteraction, isRerenderRequest = false ) =>
 		{
 			let description = locale.embed.description.format( [ parties.length ] );
 
@@ -127,9 +144,11 @@ module.exports =
 			}
 
 			const embed = new EmbedBuilder()
+				// @ts-ignore
 				.setTitle( locale.embed.title.format( [ interaction.guild.name ] ) )
 				.setDescription( description )
 				.setColor( bot.config.colors.embedBorder )
+				// @ts-ignore
 				.setThumbnail( interaction.guild.iconURL( { size: 512, dynamic: true } ) )
 				.setFooter( { text: locale.embed.footer.format( [ page + 1, pages.length ] ) } );
 
@@ -144,6 +163,7 @@ module.exports =
 								return {
 									label: p.name,
 									value: p.id,
+									// @ts-ignore
 									description: `${p.meta.privacy.has( 'Owner' ) ? locale.selectMenu.owner.format( [ `${ ( bot.client.users.cache.get( p.owner ) ).tag }` ] ) : ''}${p.meta.privacy.has( 'Owner' ) ? ' | ' : ''}${p.meta.privacy.has( 'Members' ) ? locale.selectMenu.members.format( [ p.members.length + 1 ] ) : ''}`,
 									emoji: '🔱'
 								};
@@ -156,13 +176,13 @@ module.exports =
 					new ButtonBuilder()
 						.setCustomId( `${interaction.id}.party-list-prev` )
 						.setEmoji( '⬅️' )
-						.setStyle( 'Primary' )
+						.setStyle( ButtonStyle.Primary )
 						.setDisabled( page === 0 ),
 
 					new ButtonBuilder()
 						.setCustomId( `${interaction.id}.party-list-next` )
 						.setEmoji( '➡️' )
-						.setStyle( 'Primary' )
+						.setStyle( ButtonStyle.Primary )
 						.setDisabled( page === pages.length - 1 )
 				);
 
@@ -170,25 +190,31 @@ module.exports =
 			{
 				if ( isRerenderRequest )
 				{
+					// @ts-ignore
 					return i.update( { embeds: [ embed ], components: [ row, buttonsRow ] } );
 				}
 				return interaction.replied || interaction.deferred  ?
+					// @ts-ignore
 					await interaction.editReply( { embeds: [embed], components: [row, buttonsRow] } ) :
+					// @ts-ignore
 					await interaction.reply( { embeds: [embed], components: [row, buttonsRow] } );
 			}
 			else
 			{
 				if ( isRerenderRequest )
 				{
+					// @ts-ignore
 					return i.update( { embeds: [ embed ], components: [row] } );
 				}
 				return interaction.replied || interaction.deferred ?
+					// @ts-ignore
 					await interaction.editReply( { embeds: [embed], components: [row] } ) :
+					// @ts-ignore
 					await interaction.reply( { embeds: [embed], components: [row] } );
 			}
 		};
 
-		collector.on( 'collect', async ( i ) =>
+		collector.on( 'collect', async ( i: any ) =>
 		{
 			// Кнопачки пагинатора
 			if ( i.customId === `${interaction.id}.party-list-prev` ) { await listPrevFn( i ); }

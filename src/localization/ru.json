@@ -29,7 +29,8 @@
 			"embed": {
 				"title": "Список браков {0}",
 				"description": "`Всего браков:` **{0}**\n\n",
-				"descriptionField": "`{0}` | {1} & {2}\nПоженились {3}\n"
+				"descriptionField": "`{0}` | {1} & {2}\nПоженились {3}\n",
+				"footer": "Страница {0}/{1}"
 			}
 		},
 		"marry.divorce": {

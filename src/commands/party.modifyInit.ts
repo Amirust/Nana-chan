@@ -1,9 +1,11 @@
 // Отдельный файл под инициальную настройку чтобы не перегружать основной файл
+// @ts-nocheck
 
-const { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder } = require( 'discord.js' );
-const Party = require( '../structures/Party' );
+import { EmbedBuilder, ActionRowBuilder, SelectMenuBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, ButtonBuilder } from 'discord.js';
+import Party from '../structures/Party';
 
-module.exports = {
+export default
+{
 	info: {
 		name: 'modifyInit',
 	},

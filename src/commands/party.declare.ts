@@ -1,7 +1,9 @@
 // ФАЙЛ ДЕКЛАРАЦИИ ПОД-КОМАНД
 // ПАРТИИ
+import { CommandsDeclaration } from '../types/CommandsDeclaration';
 
-module.exports = {
+export const command: CommandsDeclaration =
+{
 	info: {
 		name: 'party',
 		description: 'Партии',
