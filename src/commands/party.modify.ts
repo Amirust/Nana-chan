@@ -61,7 +61,7 @@ export const command: Command =
 				// @ts-ignore
 				.setTitle( locale.embed.title.format( [ party.name ] ) )
 				// @ts-ignore
-				.setDescription( locale.embed.description.format( [ party.meta.course, party.meta.description.render() ] ) )
+				.setDescription( locale.embed.description.format( [ party.meta.course, party.meta.description.render(), party.meta?.charter?.render() || errors.None ] ) )
 				// @ts-ignore
 				.setThumbnail( party.meta.icon )
 				.setColor( bot.config.colors.embedBorder );
@@ -88,7 +88,7 @@ export const command: Command =
 
 			// @ts-ignore
 			party.meta.description = i.fields.getTextInputValue( `${interaction.id}.party.modify.description.input` );
-			i.reply( { content: locale.DescriptionSetSuccess, ephemeral: true } );
+			await i.reply( { content: locale.DescriptionSetSuccess, ephemeral: true } );
 			// @ts-ignore
 			await party.save();
 			// @ts-ignore
@@ -101,19 +101,36 @@ export const command: Command =
 
 			// @ts-ignore
 			party.meta.course = i.fields.getTextInputValue( `${interaction.id}.party.modify.course.input` );
-			i.reply( { content: locale.CourseSetSuccess, ephemeral: true } );
+			await i.reply( { content: locale.CourseSetSuccess, ephemeral: true } );
 			// @ts-ignore
 			await party.save();
 			// @ts-ignore
 			await returnToMenu( interaction );
 		};
+		const charterModalHandler = async ( i: ModalSubmitInteraction ) =>
+		{
+			if ( i.user.id !== interaction.user.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
+
+			const value = i.fields.getTextInputValue( `${interaction.id}.party.modify.charter.input` );
+			// @ts-ignore
+			if ( /УДАЛИТЬУСТАВ/g.test( value ) ) { party.meta.charter = null; }
+			// @ts-ignore
+			else { party.meta.charter = value; }
+
+			await i.reply( { content: locale.CharterSetSuccess, ephemeral: true } );
+			// @ts-ignore
+			await party.save();
+			// @ts-ignore
+			await returnToMenu( interaction );
+		};
+
 		const deleteModalHandler = async ( i: ModalSubmitInteraction ) =>
 		{
 			if ( i.user.id !== interaction.user.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 
 			// @ts-ignore
 			await party.delete();
-			i.reply( { content: locale.DeleteSuccess, ephemeral: true } );
+			await i.reply( { content: locale.DeleteSuccess, ephemeral: true } );
 			await collector.stop( 'deleteAnyway' );
 		};
     
@@ -186,6 +203,29 @@ export const command: Command =
 
 				// @ts-ignore
 				modal.addComponents( new ActionRowBuilder().addComponents( courseInput ) );
+				await i.showModal( modal );
+			}
+			if ( i.values[0] === 'charter' )
+			{
+				const modal = new ModalBuilder()
+					.setCustomId( `${interaction.id}.party.modify.charter` )
+					.setTitle( locale.init.modal.charterTitle )
+					// @ts-ignore
+					.setAction( charterModalHandler, collector );
+
+				const charterInput = new TextInputBuilder()
+					.setCustomId( `${interaction.id}.party.modify.charter.input` )
+					.setLabel( locale.init.modal.charterLabel )
+					.setStyle( TextInputStyle.Paragraph )
+					// @ts-ignore
+					.setValue( party.meta?.charter?.md || '' )
+					.setRequired( true )
+					.setMaxLength( 1000 )
+					.setMinLength( 10 )
+					.setPlaceholder( locale.init.modal.charterPlaceholder );
+
+				// @ts-ignore
+				modal.addComponents( new ActionRowBuilder().addComponents( charterInput ) );
 				await i.showModal( modal );
 			}
 			if ( i.values[0] === 'delete' )

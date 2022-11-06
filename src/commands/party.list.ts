@@ -43,6 +43,8 @@ export const command: Command =
 		} );
 
 		let page = 0;
+		let infopage = 0;
+		let infoparty: string | null = null;
 		const pages = chunk( parties, 5 );
 
 		const listPrevFn = async ( i: ButtonInteraction ) =>
@@ -69,41 +71,84 @@ export const command: Command =
 			}
 		};
 
+		const infoPrevFn = async ( i: ButtonInteraction ) =>
+		{
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
+			if ( !i.customId.startsWith( interaction.id ) ) { return; }
+
+			if ( infopage > 0 )
+			{
+				infopage--;
+				// @ts-ignore
+				await renderPartyInfo( i, infoparty );
+			}
+		};
+
+		const infoNextFn = async ( i: ButtonInteraction ) =>
+		{
+			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
+			if ( !i.customId.startsWith( interaction.id ) ) { return; }
+
+			if ( infopage < 1 )
+			{
+				infopage++;
+				// @ts-ignore
+				await renderPartyInfo( i, infoparty );
+			}
+		};
+
 		const buttonBackToListFn = async ( i: ButtonInteraction ) =>
 		{
 			if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 			if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
+			infoparty = null;
+			infopage = 0;
 			await renderPage( i, true );
 		};
 
-		const renderPartyInfo = async ( i: SelectMenuInteraction ) =>
+		const renderPartyInfo = async ( i: SelectMenuInteraction, pid?: string ) =>
 		{
-			const id = i.values[0];
+			const id = pid ? pid : i.values[0];
 			const party = parties.find( p => p.id === id );
+			if ( !party ) { return i.reply( { content: errors.NotFound, ephemeral: true } ); }
+			infoparty = id;
 			// @ts-ignore
 			const members = party.members.concat( [ party.owner ] );
 
 			const reputations = await UserReputation.getMany( members );
 			const reputationSum = reputations.reduce( ( acc, cur ) => acc + Number( cur.reputation ), 0 );
 
-			if ( !party ) { return i.reply( { content: errors.NotFound, ephemeral: true } ); }
-
-			let infoDescription = locale.info.description.format( [ time( new Date( party.date ), 'R' ), party.meta.course, reputationSum] );
+			let infoDescription = infopage === 0 ?
+				locale.info.description.format( [ time( new Date( party.date ), 'R' ), party.meta.course, reputationSum] ) :
+				// @ts-ignore
+				locale.info.charter.format( [ party.meta.charter?.render() ] );
 			// @ts-ignore
-			if ( party.meta.privacy.has( 'Owner' ) )
+			if ( party.meta.privacy.has( 'Owner' ) && infopage !== 1 )
 			{
 				infoDescription += locale.info.owner.format( [ `<@${party.owner}>` ] );
 			}
 			// @ts-ignore
-			if ( party.meta.privacy.has( 'Members' ) )
+			if ( party.meta.privacy.has( 'Members' ) && infopage !== 1 )
 			{
 				// @ts-ignore
-				infoDescription += locale.info.members.format( [ members.length, members.map( m => `[${reputations.find( rec => rec.id === m ).reputation}] <@${m}>` ).join( ', ' ) ] ) + '\n';
+				infoDescription +=
+					locale.info.members.format(
+						[
+							members.length,
+							members
+								.map( m => ( { rep: reputations.find( rec => rec.id === m )?.reputation || 0, id: m } ) )
+								.sort( ( a, b ) => b.rep - a.rep )
+								.map( m => `[${m.rep}] <@${m.id}>` )
+								.join( ', ' )
+						] ) + '\n';
 			}
 
-			// @ts-ignore
-			infoDescription += `\n${ party.meta.description.render() }`;
+			if ( infopage !== 1 )
+			{
+				// @ts-ignore
+				infoDescription += `\n${ party.meta.description.render() }`;
+			}
 
 			const embed = new EmbedBuilder()
 				.setTitle( locale.info.title.format( [ party.name ] ) )
@@ -119,6 +164,23 @@ export const command: Command =
 						.setLabel( locale.info.back )
 						.setStyle( ButtonStyle.Primary )
 				);
+
+			if ( party.meta.charter )
+			{
+				row.addComponents(
+					new ButtonBuilder()
+						.setCustomId( `${interaction.id}.party-info-prev` )
+						.setEmoji( '⬅️' )
+						.setStyle( ButtonStyle.Primary )
+						.setDisabled( infopage === 0 ),
+
+					new ButtonBuilder()
+						.setCustomId( `${interaction.id}.party-info-next` )
+						.setEmoji( '➡️' )
+						.setStyle( ButtonStyle.Primary )
+						.setDisabled( infopage === 1 )
+				);
+			}
 
 			// @ts-ignore
 			return i.update( { embeds: [embed], components: [row] } );
@@ -219,6 +281,9 @@ export const command: Command =
 			// Кнопачки пагинатора
 			if ( i.customId === `${interaction.id}.party-list-prev` ) { await listPrevFn( i ); }
 			if ( i.customId === `${interaction.id}.party-list-next` ) { await listNextFn( i ); }
+
+			if ( i.customId === `${interaction.id}.party-info-prev` ) { await infoPrevFn( i ); }
+			if ( i.customId === `${interaction.id}.party-info-next` ) { await infoNextFn( i ); }
 
 			// Селект меню списка партий
 			if ( i.customId === `${interaction.id}.party-list` ) { await renderPartyInfo( i ); }

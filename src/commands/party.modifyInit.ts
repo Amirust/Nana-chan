@@ -52,7 +52,7 @@ export default
 					new SelectMenuBuilder()
 						.setCustomId( `${interaction.id}.party.modify` )
 						.setPlaceholder( locale.init.selectMenu.placeholder )
-						.addOptions( locale.init.selectMenu.options )
+						.addOptions( locale.init.selectMenu.options.filter( item => item.value !== 'charter' ) )
 						.setAction( initSelectMenuHandler, collector )
 				);
 
