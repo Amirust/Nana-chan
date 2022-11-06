@@ -1,5 +1,6 @@
 import PartyMeta from './PartyMeta';
 import { Snowflake } from 'discord.js';
+import UserReputation from './UserReputation';
 
 type PartyT = {
 	id: string,
@@ -109,6 +110,22 @@ class Party
 	{
 		this.members = this.members.filter( member => !ids.includes( member ) );
 		return await this.save();
+	}
+
+	async getInfo()
+	{
+		const members = this.members.concat( this.owner );
+		const reputations = await UserReputation.getMany( members );
+		const reputationSum = reputations.reduce( ( acc, cur ) => acc + cur.reputation, 0 );
+
+		const reputation2members = members
+			.map( m => ( { rep: reputations.find( rec => rec.id === m )?.reputation || 0, id: m } ) )
+			.sort( ( a, b ) => b.rep - a.rep );
+
+		return {
+			reputationSum,
+			reputation2members
+		};
 	}
 
 	toJSON()
