@@ -88,7 +88,7 @@ export const command: Command =
 								info.reputation2members.length,
 								info.reputation2members
 									.map( m => `[${m.rep}] <@${m.id}>` )
-									.join( ', ' )
+									.join( '\n' )
 							] ) + '\n';
 				}
 

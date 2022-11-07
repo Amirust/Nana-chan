@@ -46,6 +46,6 @@ export const command: ContextCommand =
 		await reputation.save();
 
 		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() } );
-		return interaction.reply( { content: locale.Success.format( [ `<@${user.id}>`, reputation.reputation ] ) } );
+		return interaction.reply( { content: locale.Success.format( [ `<@${user.id}>`, `<@${interaction.user.id}>`, reputation.reputation ] ) } );
 	}
 };
