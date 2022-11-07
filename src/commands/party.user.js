@@ -35,7 +35,7 @@ module.exports =
 		}
 		if ( party.meta.privacy.has( 'Members' ) )
 		{
-			infoDescription += locale.embed.members.format( [ members.length, members.map( m => `[${reputations.find( rec => rec.id === m ).reputation}] <@${m}>` ).join( ', ' ) ] ) + '\n';
+			infoDescription += locale.embed.members.format( [ members.length, members.map( m => `[${reputations.find( rec => rec.id === m ).reputation}] <@${m}>` ).join( '\n' ) ] ) + '\n';
 		}
 
 		infoDescription += `\n${ party.meta.description.render() }`;
