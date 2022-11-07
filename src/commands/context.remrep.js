@@ -42,6 +42,6 @@ module.exports =
 		await reputation.save();
 
 		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() });
-		return interaction.reply({ content: locale.Success.format( [ `<@${interaction.user.id}>`,  `<@${user.id}>`, reputation.reputation ] ), allowedMentions: [interaction.user.id]});
+		return interaction.reply({ content: locale.Success.format( [ `<@${interaction.user.id}>`,  `<@${user.id}>`, reputation.reputation ] ), allowedMentions: [user.id]});
 	}
 };
