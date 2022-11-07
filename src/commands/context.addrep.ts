@@ -22,7 +22,7 @@ export const command: ContextCommand =
 		if ( !interaction.member?.roles.cache.has( '925061751563776016' ) ) 
 		{
 			return interaction.reply( {content: locale.NoPermissions, ephemeral: true} );
-		};
+		}
 		
 		if ( bot.cooldowns.reputation.has( interaction.user.id ) )
 		{
@@ -46,6 +46,6 @@ export const command: ContextCommand =
 		await reputation.save();
 
 		bot.cooldowns.reputation.set( interaction.user.id, { createdAt: Date.now() } );
-		return interaction.reply( { content: locale.Success.format( [ `<@${user.id}>`, `<@${interaction.user.id}>`, reputation.reputation ] ) } );
+		return interaction.reply( { content: locale.Success.format( [ `<@${user.id}>`, `<@${interaction.user.id}>`, reputation.reputation ] ), allowedMentions: { users: [user.id] } } );
 	}
 };
