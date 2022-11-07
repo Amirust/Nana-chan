@@ -6,6 +6,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build
+
 ARG NANA_TOKEN
 ENV NANA_TOKEN=$NANA_TOKEN
 

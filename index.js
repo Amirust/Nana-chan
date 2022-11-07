@@ -1,5 +1,5 @@
-const Bot = require( './src/client/Client' );
-const { Console } = require( './src/utils/colors' );
+const Bot = require( './dist/client/Client' ).default;
+const { Console } = require( './dist/utils/colors' );
 const config = require( './config.json' );
 
 ( async () =>
@@ -14,7 +14,7 @@ const config = require( './config.json' );
 		return this.replace( /\{([0-9a-zA-Z_]+)\}/g, ( _, item ) =>
 		{
 			return answers[ item ];
-		});
+		} );
 	};
 
 	if ( ![ 'MONGO', 'NANA_TOKEN' ].every( ( envvar ) => envvar in process.env ) )
@@ -23,14 +23,14 @@ const config = require( './config.json' );
 		process.exit( 1 );
 	}
 
-	global.bot = new Bot({
+	global.bot = new Bot( {
 		token: process.env.NANA_TOKEN,
 		mongo: process.env.MONGO,
 		config
-	});
+	} );
 
 	process.on( 'unhandledRejection', console.error );
 	process.on( 'uncaughtException', console.error );
 
 	await bot.init();
-})();
+} )();
