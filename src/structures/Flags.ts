@@ -8,12 +8,12 @@ class Flags
 		this.bitfield = this.constructor.resolve( bitfield ) ?? 0;
 	}
 
-	has( bit: number ): boolean
+	has( bit: number | string ): boolean
 	{
 		if ( Array.isArray( bit ) ) return bit.every( p => this.has( p ) );
 		// @ts-ignore
-		bit = this.constructor.resolve( bit );
-		return ( this.bitfield & bit ) === bit;
+		const resolved = this.constructor.resolve( bit );
+		return ( this.bitfield & resolved ) === bit;
 	}
 
 	add( ...bits: Array<number> ): Flags

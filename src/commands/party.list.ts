@@ -48,7 +48,6 @@ export const command: Command =
 
 			const listPrevFn = async ( i: ButtonInteraction ) =>
 			{
-				if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 				if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 				if ( page > 0 )
@@ -60,7 +59,6 @@ export const command: Command =
 
 			const listNextFn = async ( i: ButtonInteraction ) =>
 			{
-				if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 				if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 				if ( page < pages.length - 1 )
@@ -72,7 +70,6 @@ export const command: Command =
 
 			const infoPrevFn = async ( i: ButtonInteraction ) =>
 			{
-				if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 				if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 				if ( infopage > 0 )
@@ -85,7 +82,6 @@ export const command: Command =
 
 			const infoNextFn = async ( i: ButtonInteraction ) =>
 			{
-				if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 				if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 				if ( infopage < 1 )
@@ -98,7 +94,6 @@ export const command: Command =
 
 			const buttonBackToListFn = async ( i: ButtonInteraction ) =>
 			{
-				if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
 				if ( !i.customId.startsWith( interaction.id ) ) { return; }
 
 				infoparty = null;
@@ -272,6 +267,8 @@ export const command: Command =
 
 			collector.on( 'collect', async ( i: any ) =>
 			{
+				if ( i.user.id !== interaction.user?.id ) { return i.reply( { content: errors.InteractionNotForYou, ephemeral: true } ); }
+
 				// Кнопачки пагинатора
 				if ( i.customId === `${interaction.id}.party-list-prev` ) { await listPrevFn( i ); }
 				if ( i.customId === `${interaction.id}.party-list-next` ) { await listNextFn( i ); }
