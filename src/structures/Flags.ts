@@ -12,8 +12,9 @@ class Flags
 	{
 		if ( Array.isArray( bit ) ) return bit.every( p => this.has( p ) );
 		// @ts-ignore
-		const resolved = this.constructor.resolve( bit );
-		return ( this.bitfield & resolved ) === bit;
+		bit = this.constructor.resolve( bit );
+		// @ts-ignore
+		return ( this.bitfield & bit ) === bit;
 	}
 
 	add( ...bits: Array<number> ): Flags

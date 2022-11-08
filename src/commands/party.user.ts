@@ -83,7 +83,7 @@ export const command: Command =
 				if ( party.meta.privacy.has( 'Members' ) && infopage !== 1 )
 				{
 					infoDescription +=
-						locale.info.members.format(
+						locale.embed.members.format(
 							[
 								info.reputation2members.length,
 								info.reputation2members

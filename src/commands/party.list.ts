@@ -113,7 +113,7 @@ export const command: Command =
 				let infoDescription = infopage === 0 ?
 					locale.info.description.format( [ time( new Date( party.date ), 'R' ), party.meta.course, info.reputationSum] ) :
 					// @ts-ignore
-					locale.info.charter.format( [ party.meta.charter?.render() ] );
+					locale.info.charter.format( [ party.meta?.charter?.render() ] );
 				// @ts-ignore
 				if ( party.meta.privacy.has( 'Owner' ) && infopage !== 1 )
 				{
@@ -209,16 +209,16 @@ export const command: Command =
 							.setCustomId( `${interaction.id}.party-list` )
 							.setPlaceholder( locale.selectMenu.placeholder )
 							.addOptions(
-								pages[ page ].map( ( p ) =>
+								await Promise.all( pages[ page ].map( async ( p ) =>
 								{
 									return {
 										label: p.name,
 										value: p.id,
 										// @ts-ignore
-										description: `${p.meta.privacy.has( 'Owner' ) ? locale.selectMenu.owner.format( [ `${ ( bot.client.users.cache.get( p.owner ) ).tag }` ] ) : ''}${p.meta.privacy.has( 'Owner' ) ? ' | ' : ''}${p.meta.privacy.has( 'Members' ) ? locale.selectMenu.members.format( [ p.members.length + 1 ] ) : ''}`,
+										description: `${p.meta.privacy.has( 'Owner' ) ? locale.selectMenu.owner.format( [ `${ ( await bot.client.users.fetch( p.owner ) ).tag }` ] ) : ''}${p.meta.privacy.has( 'Owner' ) ? ' | ' : ''}${p.meta.privacy.has( 'Members' ) ? locale.selectMenu.members.format( [ p.members.length + 1 ] ) : ''}`,
 										emoji: '🔱'
 									};
-								} )
+								} ) )
 							)
 					);
 
