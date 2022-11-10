@@ -63,7 +63,7 @@ export const command: Command =
 				return interaction.reply( { content: member.id === interaction.user.id ? locale.YouHasNoParty : locale.UserHasNoParty, ephemeral: true } );
 			}
 			// @ts-ignore
-			const renderPartyInfo = async ( i: ButtonInteraction ) =>
+			const renderPartyInfo = async ( i: ButtonInteraction, removeRow: boolean = false ) =>
 			{
 				// @ts-ignore
 				const info = await party.getInfo();
@@ -128,6 +128,11 @@ export const command: Command =
 					// @ts-ignore
 					.setFooter( { text: `ID: ${party.id}` } );
 
+				if ( removeRow )
+				{
+					return await interaction.editReply( { embeds: [ embed ], components: [] } );
+				}
+
 				return party?.meta.charter ?
 					interaction.replied ?
 						// @ts-ignore
@@ -149,7 +154,8 @@ export const command: Command =
 			} );
 			collector.on( 'end', ( collected, reason ) =>
 			{
-				if ( reason !== 'success' ) { interaction.deleteReply(); }
+				// @ts-ignore
+				if ( reason !== 'success' ) { renderPartyInfo( interaction, true ); }
 			} );
 
 			collector.on( 'collect', async ( i: any ) =>
