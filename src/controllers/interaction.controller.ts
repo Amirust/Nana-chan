@@ -5,7 +5,7 @@ import {
 	CommandInteraction,
 	Collection,
 	ApplicationCommand,
-	ApplicationCommandDataResolvable, PermissionsBitField
+	ApplicationCommandDataResolvable, PermissionsBitField, time
 } from 'discord.js';
 import { Command } from '../types/Command';
 import { CommandInfo } from '../types/Command';
@@ -36,6 +36,11 @@ class CommandsController
 		interaction = await interaction;
 		const command = this.getCommand( interaction.commandName );
 		if ( !command ) return;
+
+		const blocked = await bot.db.collection( 'blocked' ).findOne( { id: interaction.user.id } );
+
+		// Скам если бот в альфе
+		if ( blocked ) { return interaction.reply( { content: `Доступ к данному функционалу времено ограничен или отключен для вас вовсе по причине \`${blocked?.reason || 'Не указана' }\` с ${time( new Date( blocked.at ), 'f' )}`, ephemeral: true } ); }
 
 		// Альфа тест скам
 		// if ( !bot.config.alphaTesters.includes( interaction.user.id ) ) { return interaction.reply({ content: 'Эта команда находится в альфа-тестировании и доступна только альфа-тестерам', ephemeral: true }); }
