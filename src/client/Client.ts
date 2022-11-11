@@ -1,7 +1,6 @@
-import {Client, Collection, CommandInteraction, IntentsBitField, Partials} from 'discord.js';
+import {Client, Collection, IntentsBitField, Partials} from 'discord.js';
 import { Db, MongoClient } from 'mongodb';
 import fs from 'fs';
-// @ts-ignore
 import InteractionController from '../controllers/interaction.controller';
 
 require( '../structures/Button' ); // Модификация прототипа Button
@@ -23,12 +22,12 @@ class Bot
 	public config;
 	public store!: BotStore;
 	public cooldowns: { [name: string]: Collection<string, RequestsCooldown> };
+	public readonly InteractionController: InteractionController;
+	public readonly IC: InteractionController;
 
 	protected mongo!: MongoClient;
 
 	private readonly commands: Collection<string, Command>;
-	private readonly InteractionController: InteractionController;
-	private readonly IC: InteractionController;
 	private readonly token!: string;
 	private readonly _mongo!: string;
 

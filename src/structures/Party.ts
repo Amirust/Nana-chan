@@ -8,7 +8,7 @@ type PartyT = {
 	members?: Array<Snowflake> | null,
 	owner: Snowflake,
 	status?: number,
-	roleId?: Snowflake,
+	roleId: Snowflake,
 	date: Date,
 	meta?: any
 }
@@ -20,7 +20,7 @@ class Party
 	public members: Array<Snowflake>;
 	public owner: Snowflake;
 	public status: number;
-	public roleId: Snowflake | null;
+	public roleId: Snowflake;
 	public date: Date;
 	public meta: PartyMeta;
 
@@ -31,7 +31,7 @@ class Party
 		this.members = data.members || []; // Array<Snowflake>
 		this.owner = data.owner;
 		this.status = data.status || 0; // 0 - Ожидает инициализации, 1 - Активна
-		this.roleId = data.roleId || null;
+		this.roleId = data.roleId;
 		this.date = data.date;
 		this.meta = new PartyMeta( data.meta );
 	}

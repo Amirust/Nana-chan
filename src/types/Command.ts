@@ -1,22 +1,15 @@
 import {
-	CommandInteraction,
-	CommandInteractionOption,
-	SlashCommandAttachmentOption,
-	SlashCommandBooleanOption,
-	SlashCommandChannelOption,
-	SlashCommandIntegerOption,
-	SlashCommandMentionableOption,
-	SlashCommandNumberOption,
-	SlashCommandRoleOption, SlashCommandStringOption, SlashCommandUserOption
+	AutocompleteInteraction,
+	CommandInteraction
 } from 'discord.js';
 import { Localization } from './Localization';
 
 export type CommandInfo = {
-	name: string,
-	description?: string,
-	options?: Array<any>,
-	type?: number,
-	local?: boolean,
+	name: string, // Название команды
+	description?: string, // Описание команды
+	options?: Array<any>, // Опции команды
+	type?: number, // Тип команды
+	local?: boolean, // Локальная команда
 }
 
 export interface Command {
@@ -25,5 +18,5 @@ export interface Command {
 	type?: number,
 	permissions?: Array<string>,
 	execute( interaction: CommandInteraction, locale: Localization ): Promise<any>,
-	executeAC?( interaction: CommandInteraction, locale: Localization ): Promise<any>;
+	executeAC?( interaction: AutocompleteInteraction, locale: Localization ): Promise<any>;
 }

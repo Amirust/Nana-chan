@@ -28,11 +28,9 @@ export const command: ContextCommand =
 		if ( bot.cooldowns.reputation.has( interaction.user.id ) )
 		{
 			const cooldown = bot.cooldowns.reputation.get( interaction.user.id );
-			// @ts-ignore
-			if ( !( cooldown.createdAt + 1000 * 60 * 60 * 4 < Date.now() ) )
+			if ( cooldown && !( cooldown.createdAt + 1000 * 60 * 60 * 4 < Date.now() ) )
 			{
 				return interaction.reply( {
-					// @ts-ignore
 					content: locale.Cooldown.format( [ time( new Date( cooldown.createdAt + 1000 * 60 * 60 * 4 ), 'R' ) ] ),
 					ephemeral: true
 				} );

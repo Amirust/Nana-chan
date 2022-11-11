@@ -25,8 +25,7 @@ export const command: Command =
 		if ( bot.store.activeDivorcesRequests.has( interaction.user.id ) )
 		{
 			const request = bot.store.activeDivorcesRequests.get( interaction.user.id );
-			// @ts-ignore
-			if ( !( request.createdAt + 1000 * 60 < Date.now() ) )
+			if ( request && !( request.createdAt + 1000 * 60 < Date.now() ) )
 			{
 				return interaction.reply( {
 					// @ts-ignore

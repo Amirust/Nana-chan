@@ -22,11 +22,9 @@ export const command: Command =
 		if ( bot.store.activeMarriesRequests.has( interaction.user.id ) )
 		{
 			const request = bot.store.activeMarriesRequests.get( interaction.user.id );
-			// @ts-ignore
-			if ( !( request.createdAt + 1000 * 60 < Date.now() ) )
+			if ( request && !( request.createdAt + 1000 * 60 < Date.now() ) )
 			{
 				return interaction.reply( {
-					// @ts-ignore
 					content: locale.AlreadyHasRequest.format( [ time( new Date( request.createdAt + 1000 * 60 ), 'R' ), `<@${request.target}>` ] ), 
 					ephemeral: true
 				} );

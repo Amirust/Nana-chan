@@ -1,6 +1,7 @@
 import { Command } from '../types/Command';
 
 import Party from '../structures/Party';
+import { GuildMemberRoleManager } from 'discord.js';
 
 export const command: Command =
 {
@@ -24,15 +25,11 @@ export const command: Command =
 			return interaction.reply( { content: locale.YouOwner, ephemeral: true } );
 		}
 
-		// @ts-ignore
-		const party = await Party.get( interaction.member.id );
+		const party = await Party.get( interaction.member!.user.id ) as Party;
 
-		// @ts-ignore
-		await party.removeMember( interaction.member.id );
-		// @ts-ignore
-		await interaction.member.roles.remove( party.roleId );
+		await party.removeMember( interaction.member!.user.id );
+		await ( interaction.member!.roles as GuildMemberRoleManager ).remove( party.roleId );
 
-		// @ts-ignore
-		await interaction.reply( { content: locale.Success.format( [ `<@${interaction.member.id}>`, party.name ] ) } );
+		await interaction.reply( { content: locale.Success.format( [ `<@${interaction.member!.user.id}>`, party.name ] ) } );
 	}
 };
